@@ -5,22 +5,18 @@ import org.springframework.stereotype.Component;
 
 public enum CompanyStatus {
 
-    ENABLED("Enabled",1l),
-    DISABLED("Disabled",2L);
+    ENABLED("Enabled"),
+    DISABLED("Disabled");
 
     private final String value;
-    private final Long  id;
 
-    CompanyStatus(String value, Long id) {
+
+    CompanyStatus(String value) {
         this.value = value;
-        this.id = id;
     }
 
     public String getValue() {
         return value;
     }
 
-    public Long getId() {
-        return id;
-    }
 }

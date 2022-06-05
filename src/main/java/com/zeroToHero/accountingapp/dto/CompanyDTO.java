@@ -5,7 +5,9 @@ import com.zeroToHero.accountingapp.enums.State;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -20,7 +22,8 @@ public class CompanyDTO {
     private String zip;
     private String representative;
     private String email;
-    private LocalDateTime establishmentDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate establishmentDate;
     private boolean enabled;
     private String phone;
     private State state;

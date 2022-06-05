@@ -24,39 +24,47 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> listAllUsers() {
-        return userRepository.findAll().stream().map(user->mapperUtil.convert(user,new UserDTO())).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
     }
-
 
 
     @Override
     public void save(UserDTO dto) {
 
-        if (dto.getUserStatus().equals("ACTIVE")){
-            dto.setUserStatus(UserStatus.ACTIVE);
-        } else {
-            dto.setUserStatus(UserStatus.INACTIVE);
-        }
-
-        userRepository.save(mapperUtil.convert(dto,new User()));
+        dto.setEnabled(true);
+        userRepository.save(mapperUtil.convert(dto, new User()));
     }
 
     @Override
     public UserDTO update(UserDTO dto) {
-        return null;
+
+        User user = userRepository.findByEmail(dto.getEmail());
+        User convertedUser = mapperUtil.convert(dto, new User());
+        //set id to converted object which we found in DB by Email
+        convertedUser.setId(user.getId());
+        convertedUser.setEnabled(user.getEnabled());
+        convertedUser.setPassword(user.getPassword());
+        userRepository.save(convertedUser);
+
+        return findByEmail(dto.getEmail());
     }
 
-
-
     @Override
-    public void delete(String username) {
-
+    public void delete(String email) {
+        User user = userRepository.findByEmail(email);
+        user.setIsDeleted(true);
+        userRepository.save(user);
     }
 
     @Override
     public UserDTO findById(Long id) {
-        return mapperUtil.convert(userRepository.findById(id).get(),new UserDTO());
+        return mapperUtil.convert(userRepository.findById(id).get(), new UserDTO());
     }
 
+    @Override
+    public UserDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return mapperUtil.convert(user, new UserDTO());
+    }
 
 }
