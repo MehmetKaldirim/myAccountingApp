@@ -2,7 +2,7 @@ package com.zeroToHero.accountingapp.dto;
 
 import com.zeroToHero.accountingapp.entity.Product;
 
-import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
