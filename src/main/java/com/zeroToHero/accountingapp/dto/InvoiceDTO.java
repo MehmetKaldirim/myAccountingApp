@@ -33,11 +33,6 @@ public class InvoiceDTO {
     @NotNull
     private InvoiceType invoiceType;
 
-    private BigDecimal cost;
-
-    private BigDecimal total;
-
-    private BigDecimal tax;
 
     private LocalDate invoiceDate;
 

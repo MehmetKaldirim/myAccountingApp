@@ -48,13 +48,13 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr th:each="salesInvoice:${salesInvoices}">
-                                                            <td class="text-truncate" th:text="${salesInvoice.invoiceNumber}"></td>
-                                                            <td class="text-truncate" th:text="${salesInvoice.invoiceDate}"></td>
-                                                            <td class="text-truncate" th:text="${company.title}"></td>
-                                                            <td class="text-truncate" th:text="${salesInvoice}"></td>
-                                                            <td class="text-truncate" th:text="${salesInvoice.invoiceNumber}"></td>
-                                                            <td class="text-truncate" ></td>
+                                                        <tr th:each="sale: ${salesInvoices}">
+                                                            <td class="text-truncate" th:text="${sale.invoice.invoiceNumber}"></td>
+                                                            <td class="text-truncate" th:text="${sale.invoice.invoiceDate}"></td>
+                                                            <td class="text-truncate" th:text="${sale.invoice.company.title}"></td>
+                                                            <td class="text-truncate" th:text="${sale.price}"></td>
+                                                            <td class="text-truncate" th:text="${sale.tax}"></td>
+                                                            <td class="text-truncate" th:text="${sale.price + sale.tax}"></td>
                                                             <td>
                                                                 <a class="ft-list" >
                                                                 </a>

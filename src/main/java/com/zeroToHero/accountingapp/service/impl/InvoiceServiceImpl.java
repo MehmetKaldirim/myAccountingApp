@@ -32,15 +32,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<InvoiceDTO> listAllByInvoiceType(InvoiceType invoiceType) {
 
         List<InvoiceDTO> listDTO = invoiceRepository.findAllByInvoiceType(invoiceType).stream().map(p -> mapperUtil.convert(p, new InvoiceDTO())).collect(Collectors.toList());
-
+        listDTO.forEach(System.out::println);
         //set cost
-        listDTO.forEach(p -> p.setCost((calculateCostByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
+        //listDTO.forEach(p -> p.setCost((calculateCostByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
 
         //set tax todo Vitaly Bahrom - set tax at 10 for now - Cihat
-        listDTO.forEach(p -> p.setTax((p.getCost().multiply(BigDecimal.valueOf(0.01))).setScale(2, RoundingMode.CEILING)));
+        //listDTO.forEach(p -> p.setTax((p.getCost().multiply(BigDecimal.valueOf(0.01))).setScale(2, RoundingMode.CEILING)));
 
         //set total
-        listDTO.forEach(p -> p.setTotal(((p.getCost()).add(p.getTax())).setScale(2, RoundingMode.CEILING)));
+        //listDTO.forEach(p -> p.setTotal(((p.getCost()).add(p.getTax())).setScale(2, RoundingMode.CEILING)));
+
         return listDTO;
     }
 

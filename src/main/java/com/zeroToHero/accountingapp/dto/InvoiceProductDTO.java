@@ -1,6 +1,8 @@
 package com.zeroToHero.accountingapp.dto;
 
 
+import com.zeroToHero.accountingapp.entity.Invoice;
+import com.zeroToHero.accountingapp.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,6 +42,9 @@ public class InvoiceProductDTO {
     @NotBlank
     @Size(min = 0)
     private BigDecimal profit;
+
+    Product product;
+    Invoice invoice;
 
 
 }

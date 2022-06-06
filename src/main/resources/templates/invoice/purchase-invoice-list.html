@@ -49,13 +49,13 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                          <tr th:each="purchaseInvoice:${purchaseInvoices}">
-                                                            <td th:text="${purchaseInvoice.invoiceNumber}"  class="text-truncate" ></td>
-                                                            <td th:text="${purchaseInvoice.invoiceDate}" class="text-truncate" ></td>
-                                                            <td th:text="${purchaseInvoice.company.title}" ></td>
-                                                            <td th:text="${purchaseInvoice.cost}"  ></td>
-                                                            <td th:text="${purchaseInvoice.tax}"  ></td>
-                                                            <td th:text="${purchaseInvoice.total}"></td>
+                                                          <tr th:each="purchase:${purchaseInvoices}">
+                                                            <td th:text="${purchase.invoice.invoiceNumber}"  class="text-truncate" ></td>
+                                                            <td th:text="${purchase.invoice.invoiceDate}" class="text-truncate" ></td>
+                                                            <td th:text="${purchase.invoice.company.title}" ></td>
+                                                            <td th:text="${purchase.price}"  ></td>
+                                                            <td th:text="${purchase.tax}"  ></td>
+                                                            <td th:text="${purchase.price + purchase.tax}"></td>
                                                             <td>
                                                                 <a class="ft-list" >
                                                                 </a>

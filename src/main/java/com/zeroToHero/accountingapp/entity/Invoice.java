@@ -3,9 +3,7 @@ package com.zeroToHero.accountingapp.entity;
 
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 import com.zeroToHero.accountingapp.enums.InvoiceStatus;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -13,8 +11,8 @@ import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 @Where(clause = "is_deleted=false")
 public class Invoice extends BaseEntity {
 
