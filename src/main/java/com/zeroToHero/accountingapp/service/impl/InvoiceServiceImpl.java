@@ -45,20 +45,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return listDTO;
     }
 
-    @Override
-    public BigDecimal calculateCostByInvoiceID(Long id) {
 
-        //Get list of all invoice-products by invoice ID
-        List<InvoiceProductDTO> invoiceProductListById = invoiceProductRepository.findAllByInvoiceId(id).stream().map(p -> mapperUtil.convert(p, new InvoiceProductDTO())).collect(Collectors.toList());
-        BigDecimal cost = BigDecimal.valueOf(0);
-
-        //add cost of each invoice-product for each invoice and write it to invoice cost field
-        for (InvoiceProductDTO each : invoiceProductListById) {
-            BigDecimal currItemCost = each.getPrice().multiply(BigDecimal.valueOf(each.getQty()));
-            cost = cost.add(currItemCost);
-        }
-        return cost;
-    }
 
 
 }
