@@ -8,7 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 
 @Entity
@@ -24,7 +25,7 @@ public class Company extends BaseEntity {
     private String representative;
     private String email;
     @Column(columnDefinition = "DATE")
-    private LocalDateTime establishmentDate;
+    private LocalDate establishmentDate;
     private boolean enabled;
     private String phone;
     @Enumerated(EnumType.STRING)

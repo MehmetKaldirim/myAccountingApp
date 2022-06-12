@@ -18,6 +18,7 @@ public class ClientVendor extends BaseEntity {
 
     private String companyName;
     private String phone;
+    @Column(unique = true, nullable = false)
     private String email;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,7 +31,7 @@ public class ClientVendor extends BaseEntity {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    private State state_id;
+    private State stateId;
 
     private boolean enabled;
 
