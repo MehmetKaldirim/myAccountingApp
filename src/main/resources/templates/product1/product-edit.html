@@ -29,8 +29,8 @@
                     <!-- Filter starts -->
                     <div class="users-list-filter px-2">
                         <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-right">
-                            <a th:href="@{/product/list}" class="btn btn-primary bg-light-primary mb-1" ><i
-                                    class="fa fa-list mr-1"></i>Product List</a>
+                            <a class="btn btn-primary bg-light-primary mb-1" ><i
+                                    class="fa fa-list mr-1"></i>Product Edit</a>
                         </div>
                     </div>
 
@@ -51,25 +51,33 @@
                                                  aria-labelledby="account-tab">
 
                                                 <!-- Account form starts -->
-                                                <form th:action="@{/product/edit/{id}(id=${product.getId()})}" novalidate method="post" th:object="${product}"
+                                                <form novalidate
+                                                       method="post"
                                                       >
                                                     <div class="row">
                                                         <div class="col-12 col-md-6">
+                                                            <div class="form-group">
+                                                                <div class="controls">
+                                                                    <label for="company-name">Company Name</label>
+                                                                    <select disabled id="company-name"
+                                                                            class="form-control">
+
+                                                                        <option
+                                                                        ></option>
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
                                                             <div class="form-group">
                                                                 <div class="controls">
                                                                     <label for="users-edit-username">Name</label>
                                                                     <input type="text" id="users-edit-username"
                                                                            class="form-control"
                                                                            placeholder="Product Name"
-                                                                           value=""
+                                                                           value="" required
                                                                            aria-invalid="false"
-                                                                           th:field="*{name}"
                                                                            >
-                                                                    <span class="help-block" th:if="${#fields.hasErrors('name')}">
-                                                                        <ul>
-                                                                            <p class="text-danger" th:each="err : ${#fields.errors('name')}" th:text="${err}"/>
-                                                                        </ul>
-                                                                    </span>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -78,14 +86,8 @@
                                                                     <input type="number" id="quantity"
                                                                            class="form-control"
                                                                            placeholder="Quantity"
-                                                                           value="" aria-invalid="false"
-                                                                           th:field="*{qty}"
+                                                                           value="" required aria-invalid="false"
                                                                            >
-                                                                    <span class="help-block" th:if="${#fields.hasErrors('qty')}">
-                                                                        <ul>
-                                                                            <p class="text-danger" th:each="err : ${#fields.errors('qty')}" th:text="${err}"/>
-                                                                        </ul>
-                                                                    </span>
                                                                 </div>
                                                             </div>
 
@@ -94,16 +96,12 @@
                                                                     <label for="users-edit-status">Status</label>
                                                                     <select id="users-edit-status"
                                                                             class="form-control"
-                                                                            th:field="*{productStatus}">
-                                                                        <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}">
-                                                                        </option>
+                                                                            required >
+                                                                        <option
+
+                                                                        ></option>
 
                                                                     </select>
-                                                                    <span class="help-block" th:if="${#fields.hasErrors('productStatus')}">
-                                                                        <ul>
-                                                                            <p class="text-danger" th:each="err : ${#fields.errors('productStatus')}" th:text="${err}"/>
-                                                                        </ul>
-                                                                    </span>
                                                                 </div>
                                                             </div>
 
@@ -113,15 +111,13 @@
                                                             <div class="form-group">
                                                                 <div class="controls">
                                                                     <label for="users-edit-status">Category</label>
-                                                                    <select id="users-edit-status1" class="form-control" required th:field="*{category}">
-                                                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.description}">
-                                                                            </option>
+                                                                    <select
+                                                                            id="users-edit-status1"
+                                                                            class="form-control"
+                                                                            required>
+                                                                        <option ></option>
+
                                                                     </select>
-                                                                    <span class="help-block" th:if="${#fields.hasErrors('category')}">
-                                                                        <ul>
-                                                                            <p class="text-danger" th:each="err : ${#fields.errors('category')}" th:text="${err}"/>
-                                                                        </ul>
-                                                                    </span>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -129,13 +125,8 @@
                                                                     <label for="users-edit-company">Description</label>
                                                                     <input type="text" id="users-edit-company"
                                                                            class="form-control"
-                                                                           placeholder="Ex: Home product, Kitchen Tools"
-                                                                           th:field="*{description}">
-                                                                    <span class="help-block" th:if="${#fields.hasErrors('description')}">
-                                                                        <ul>
-                                                                            <p class="text-danger" th:each="err : ${#fields.errors('description')}" th:text="${err}"/>
-                                                                        </ul>
-                                                                    </span>
+                                                                           placeholder="Ex: Home product, Kitchen Tools "
+                                                                           >
                                                                 </div>
                                                             </div>
 
@@ -143,15 +134,12 @@
                                                                 <div class="controls">
                                                                     <label for="users-edit-role">Unit</label>
                                                                     <select  id="users-edit-role"
-                                                                            class="form-control" th:field="*{unit}">
-                                                                        <option th:each="unit : ${units}" th:value="${unit}" th:text="${unit}">
+                                                                            class="form-control"
+                                                                            required>
+                                                                        <option >
                                                                         </option>
+
                                                                     </select>
-                                                                    <span class="help-block" th:if="${#fields.hasErrors('unit')}">
-                                                                        <ul>
-                                                                            <p class="text-danger" th:each="err : ${#fields.errors('unit')}" th:text="${err}"/>
-                                                                        </ul>
-                                                                    </span>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -161,13 +149,9 @@
                                                                     <input type="number" id="product-low-limit"
                                                                            class="form-control"
                                                                            placeholder="Quantity for low limit Alert"
-                                                                           th:field="*{lowLimitAlert}"
+                                                                           required
+
                                                                     >
-                                                                    <span class="help-block" th:if="${#fields.hasErrors('lowLimitAlert')}">
-                                                                        <ul>
-                                                                            <p class="text-danger" th:each="err : ${#fields.errors('lowLimitAlert')}" th:text="${err}"/>
-                                                                        </ul>
-                                                                    </span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-6 mt-sm-4">
@@ -175,7 +159,7 @@
                                                                         class="btn btn-success mb-2 mb-sm-0 mr-sm-2">
                                                                     Save
                                                                 </button>
-                                                                <a th:href="@{/product/delete/{id}(id=${product.id})}" class="btn btn-danger mb-2 mb-sm-0 mr-sm-2"
+                                                                <a class="btn btn-danger mb-2 mb-sm-0 mr-sm-2"
                                                                    >
                                                                     Delete</a>
                                                                 <button type="reset" class="btn btn-secondary">Cancel

@@ -1,6 +1,8 @@
 package com.zeroToHero.accountingapp.entity;
 
+
 import com.zeroToHero.accountingapp.enums.ProductStatus;
+import com.zeroToHero.accountingapp.enums.Unit;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +29,10 @@ public class Product extends BaseEntity {
 
 
     private BigInteger qty;
-    private String unit;
+
+    @Enumerated(EnumType.STRING)
+    private Unit unit;
+
     private BigInteger lowLimitAlert;
     private BigInteger tax;
 

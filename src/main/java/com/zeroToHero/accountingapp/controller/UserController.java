@@ -1,7 +1,6 @@
 package com.zeroToHero.accountingapp.controller;
 
 
-
 import com.zeroToHero.accountingapp.dto.UserDTO;
 import com.zeroToHero.accountingapp.enums.UserStatus;
 import com.zeroToHero.accountingapp.service.CompanyService;

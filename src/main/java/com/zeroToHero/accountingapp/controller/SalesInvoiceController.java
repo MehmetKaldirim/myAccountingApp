@@ -1,16 +1,13 @@
 package com.zeroToHero.accountingapp.controller;
 
 
-import com.zeroToHero.accountingapp.dto.InvoiceDTO;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
-import com.zeroToHero.accountingapp.repository.InvoiceProductRepository;
 import com.zeroToHero.accountingapp.service.CompanyService;
 import com.zeroToHero.accountingapp.service.InvoiceProductService;
 import com.zeroToHero.accountingapp.service.InvoiceService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
