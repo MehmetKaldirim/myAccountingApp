@@ -1,6 +1,7 @@
 package com.zeroToHero.accountingapp.service.impl;
 
 import com.zeroToHero.accountingapp.dto.UserDTO;
+import com.zeroToHero.accountingapp.entity.Product;
 import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.enums.UserStatus;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
@@ -24,7 +25,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> listAllUsers() {
-        return userRepository.findAll().stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
+
+        User loggedInUser = userRepository.findByEmail("admin1@company2.com");
+        List<User> list = userRepository.findAllByCompany(loggedInUser.getCompany());
+        return list.stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
     }
 
 

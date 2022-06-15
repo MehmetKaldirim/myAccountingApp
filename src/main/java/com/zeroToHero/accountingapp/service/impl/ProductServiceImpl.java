@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDTO> listAllProducts() {
         // TODO security by username or email
         // String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User loggedInUser = userRepository.findByEmail("manager1@admin.com");
+        User loggedInUser = userRepository.findByEmail("manager1@company2.com");
         List<Product> list = productRepository.findAllByCompany(loggedInUser.getCompany());
         return list.stream()
                 .map(product -> mapperUtil.convert(product, new ProductDTO())).collect(Collectors.toList());
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void save(ProductDTO productDTO) {
         Product convertedProduct = mapperUtil.convert(productDTO, new Product());
-        User loggedInUser = userRepository.findByEmail("manager1@admin.com");
+        User loggedInUser = userRepository.findByEmail("manager1@company2.com");
         convertedProduct.setCompany(loggedInUser.getCompany());
         convertedProduct.setEnabled(true);
         productRepository.save(convertedProduct);
@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO update(ProductDTO dto) {
         Product product = productRepository.findById(dto.getId()).get();
         Product convertedProduct = mapperUtil.convert(dto,new Product());
-        User loggedInUser = userRepository.findByEmail("manager1@admin.com");
+        User loggedInUser = userRepository.findByEmail("manager1@company2.com");
         convertedProduct.setCompany(loggedInUser.getCompany());
         convertedProduct.setEnabled(product.getEnabled());
         productRepository.save(convertedProduct);

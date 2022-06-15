@@ -33,7 +33,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService{
     public List<InvoiceProductDTO> listAllByInvoiceType(InvoiceType invoiceType) {
         List<InvoiceProductDTO> listDTO = invoiceProductRepository.findAllByInvoice_InvoiceType(invoiceType).stream().
                 map(p -> mapperUtil.convert(p, new InvoiceProductDTO())).collect(Collectors.toList());
-        //listDTO.forEach(System.out::println);
         return listDTO;
     }
 
