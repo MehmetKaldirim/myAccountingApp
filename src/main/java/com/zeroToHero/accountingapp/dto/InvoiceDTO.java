@@ -1,6 +1,7 @@
 package com.zeroToHero.accountingapp.dto;
 
 
+import com.zeroToHero.accountingapp.entity.ClientVendor;
 import com.zeroToHero.accountingapp.enums.InvoiceStatus;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,9 @@ public class InvoiceDTO {
     @NotNull
     private InvoiceType invoiceType;
 
+    private BigDecimal tax;
+    private BigDecimal price;
+    private BigDecimal total;
 
     private LocalDate invoiceDate;
 
@@ -40,6 +44,6 @@ public class InvoiceDTO {
 
     private CompanyDTO company;
 
-
+    private ClientVendor clientVendor;
     private List<InvoiceProductDTO> invoiceProductList;
 }

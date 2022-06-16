@@ -1,6 +1,7 @@
 package com.zeroToHero.accountingapp.repository;
 
 
+import com.zeroToHero.accountingapp.entity.Company;
 import com.zeroToHero.accountingapp.entity.InvoiceProduct;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
 
 
 
-    List<InvoiceProduct> findAllByInvoice_InvoiceType(InvoiceType invoiceType);
+    List<InvoiceProduct> findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType invoiceType, Company company);
 
 
 

@@ -39,8 +39,8 @@
                                                     <tr>
                                                         <th>Invoice No</th>
                                                         <th>Invoice Date</th>
-                                                        <th>Vendor</th>
-                                                        <th>Cost</th>
+                                                        <th>Client</th>
+                                                        <th>Income</th>
                                                         <th>Tax</th>
                                                         <th>Total</th>
                                                         <th>Add Line Item</th>
@@ -49,9 +49,9 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr th:each="sale: ${salesInvoices}">
-                                                            <td class="text-truncate" th:text="${sale.invoice.invoiceNumber}"></td>
-                                                            <td class="text-truncate" th:text="${sale.invoice.invoiceDate}"></td>
-                                                            <td class="text-truncate" th:text="${sale.invoice.company.title}"></td>
+                                                            <td class="text-truncate" th:text="${sale.invoiceNumber}"></td>
+                                                            <td class="text-truncate" th:text="${sale.invoiceDate}"></td>
+                                                            <td class="text-truncate" th:text="${sale.clientVendor.companyName}"></td>
                                                             <td class="text-truncate" th:text="${sale.price}"></td>
                                                             <td class="text-truncate" th:text="${sale.tax}"></td>
                                                             <td class="text-truncate" th:text="${sale.price + sale.tax}"></td>

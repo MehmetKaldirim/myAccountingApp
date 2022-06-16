@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> listAllUsers() {
 
-        User loggedInUser = userRepository.findByEmail("admin1@company2.com");
+        User loggedInUser = userRepository.findByEmail("admin@company2.com");
         List<User> list = userRepository.findAllByCompany(loggedInUser.getCompany());
         return list.stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
     }

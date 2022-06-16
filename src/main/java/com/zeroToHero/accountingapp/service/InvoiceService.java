@@ -12,6 +12,8 @@ public interface InvoiceService {
 
     List<InvoiceDTO> listAllByInvoiceType(InvoiceType invoiceType);
 
-   // BigDecimal calculateCostByInvoiceID(Long id);
+    BigDecimal calculatePriceByInvoiceID(Long id);
+    BigDecimal calculateTaxByInvoiceID(Long id);
+    BigDecimal calculateProfitByInvoiceID(Long id);
 
 }

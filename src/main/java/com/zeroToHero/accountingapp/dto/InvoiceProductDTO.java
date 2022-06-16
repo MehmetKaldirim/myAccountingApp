@@ -24,7 +24,7 @@ public class InvoiceProductDTO {
 
     @NotBlank
     @Size(min = 0)
-    private int qty;
+    private BigDecimal qty;
 
     @NotBlank
     @Size(min = 0)
