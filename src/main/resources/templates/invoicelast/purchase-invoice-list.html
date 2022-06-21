@@ -17,17 +17,16 @@
                 <section class="users-list-wrapper">
                     <!-- ADD PURCHASE INVOICE LINK BEGIN -->
                     <div class="users-list-filter d-flex justify-content-end">
-                        <form action="#" th:object="${clientVendor}" method="get" th:action="@{/purchase/create}">
+                        <form action="#" th:object="${client}" method="get" th:action="@{/purchase-invoice/create}">
                             <div class="form-row justify-content-end" >
                                 <div class="col-12 col-md-4">
                                     <div class="form-group">
                                         <label for="clientvendor">SELECT VENDOR</label>
                                         <select th:field="*{id}" class="custom-select" required="required" id="clientvendor">
                                             <option th:value=" ''" th:text="Select"></option>
-                                            <option th:each="vendor : ${vendors}" th:value="${vendor.id}"
-                                                    th:text="${vendor.CompanyName}"></option>
+                                            <option th:each="client : ${clients}" th:value="${client.id}"
+                                                    th:text="${client.companyName}"></option>
                                         </select>
-
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-3">
@@ -35,7 +34,7 @@
                                         <label for="create">CREATE</label>
                                         <button type="submit" name="action" value="createInvoice" id="create"
                                                 class="btn btn-success bg-light-success mb-1"
-                                        >CREATE</button>
+                                        >Invoice</button>
                                     </div>
                                 </div>
                             </div>
@@ -64,21 +63,21 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr th:each="purchase:${purchaseInvoices}">
-                                                        <td th:text="${purchase.invoiceNumber}"  class="text-truncate" ></td>
-                                                        <td th:text="${purchase.invoiceDate}" class="text-truncate" ></td>
-                                                        <td th:text="${purchase.clientVendor.companyName}" ></td>
-                                                        <td th:text="${purchase.price}"  ></td>
-                                                        <td th:text="${purchase.tax}"  ></td>
-                                                        <td th:text="${purchase.price + purchase.tax}"></td>
+                                                    <tr th:each="invoice : ${invoices}">
+                                                        <td class="text-truncate" th:text="${invoice.invoiceNumber}" ></td>
+                                                        <td class="text-truncate" th:text="${invoice.getInvoiceDate()}"></td>
+                                                        <td class="text-truncate" th:text="${invoice.client.companyName}"></td>
+                                                        <td class="text-truncate" th:text="'$ '+${invoice.getInvoiceCostWithoutTax()}"></td>
+                                                        <td class="text-truncate" th:text="'$ '+${invoice.getInvoiceCostWithTax()}"></td>
+                                                        <td class="text-truncate" th:text="'$ '+${invoice.getTotalCost()}"></td>
                                                         <td>
-                                                            <a class="ft-list" th:href="@{/purchase/update/{id}(id=${invoice.id})}">
+                                                            <a class="ft-list" th:href="@{/purchase-invoice/update/{id}(id=${invoice.id})}">
                                                             </a>
                                                         </td>
                                                         <td>
                                                             <form action="#"
                                                                   method="post">
-                                                                <a  th:href="@{/purchase/delete/{id}(id=${invoice.id})}"
+                                                                <a  th:href="@{/purchase-invoice/delete/{id}(id=${invoice.id})}"
                                                                     class="btn btn-danger mb-2 mb-sm-0 mr-sm-2"
                                                                     type="submit" name="action" value="delete">Delete
                                                                 </a>

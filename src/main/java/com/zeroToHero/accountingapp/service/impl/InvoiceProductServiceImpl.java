@@ -2,6 +2,7 @@ package com.zeroToHero.accountingapp.service.impl;
 
 
 
+import com.zeroToHero.accountingapp.dto.InvoiceDTO;
 import com.zeroToHero.accountingapp.dto.InvoiceProductDTO;
 import com.zeroToHero.accountingapp.entity.InvoiceProduct;
 import com.zeroToHero.accountingapp.entity.User;
@@ -14,11 +15,13 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class InvoiceProductServiceImpl implements InvoiceProductService{
+    private List<InvoiceProductDTO> tempProductInvoice = new ArrayList<>();
 
     final private InvoiceProductRepository invoiceProductRepository;
     final private UserRepository userRepository;
@@ -61,4 +64,34 @@ public class InvoiceProductServiceImpl implements InvoiceProductService{
     public void delete(Long id) {
 
     }
+
+    @Override
+    public void save(InvoiceProductDTO dto) {
+        invoiceProductRepository.save(mapperUtil.convert(dto,new InvoiceProduct()));
+    }
+
+    @Override
+    public List<InvoiceProductDTO> saveTemp(InvoiceProductDTO invoice) {
+        tempProductInvoice.add(invoice);
+        tempProductInvoice.forEach(System.out::println);
+        return tempProductInvoice;
+    }
+
+    @Override
+    public void deleteTemp(Long id) {
+        System.out.println("Here we are in service imp delete product");
+        for(InvoiceProductDTO invp : tempProductInvoice){
+            if(invp.getProductDTO().getId()==id){
+                tempProductInvoice.remove(invp);
+            }
+
+        }
+    }
+    @Override
+    public List<InvoiceProductDTO> listAllTempProducts() {
+        return tempProductInvoice;
+    }
+
+
+
 }

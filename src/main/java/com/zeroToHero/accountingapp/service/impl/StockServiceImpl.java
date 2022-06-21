@@ -17,7 +17,7 @@ public class StockServiceImpl implements StockService {
         this.stockRepository = stockRepository;
     }
 
-    @Override
+   /* @Override
     public BigDecimal findPriceByProduct(String description) {
         StockDetails productDetails = stockRepository.findFirstByIDateAndProductDescription(description);
         BigDecimal oldestPrice = productDetails.getPrice();
@@ -36,7 +36,7 @@ public class StockServiceImpl implements StockService {
         StockDetails productDetails = stockRepository.findFirstByIDateAndProductDescription(description);
         BigDecimal quantity = productDetails.getQuantity();
         return quantity;
-    }
+    }*/
 
 
 }

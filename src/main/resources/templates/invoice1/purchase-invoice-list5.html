@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="loading" lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head">
-    <title>Sales Invoice List</title>
+<head>
+    <head th:replace="fragments :: page_head"></head>
+    <title>List Purchase</title>
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/ico/favicon.ico}">
 </head>
 
@@ -15,17 +16,17 @@
             <div class="content-overlay"></div>
             <div class="content-wrapper">
                 <section class="users-list-wrapper">
-                    <!-- ADD SALES INVOICE LINK BEGIN -->
+                    <!-- ADD PURCHASE INVOICE LINK BEGIN -->
                     <div class="users-list-filter px-2">
                         <form>
                             <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-right">
-                                <a class="btn btn-success bg-light-success mb-1" th:href="@{/sale/create}"
+                                <a class="btn btn-success bg-light-success mb-1" th:href="@{/purchase/create}"
                                    ><i
-                                        class="fa fa-plus mr-1"></i>Create Sales Invoice</a>
+                                        class="fa fa-plus mr-1"></i>Create Purchase Invoice</a>
                             </div>
                         </form>
                     </div>
-                    <!-- ADD SALES INVOICE LINK END -->
+                    <!-- ADD PURCHASE INVOICE LINK END -->
                     <!-- LIST BEGIN -->
                     <div class="users-list-table">
                         <div class="row">
@@ -39,29 +40,28 @@
                                                     <tr>
                                                         <th>Invoice No</th>
                                                         <th>Invoice Date</th>
-                                                        <th>Client</th>
-                                                        <th>Income</th>
+                                                        <th>Vendor</th>
+                                                        <th>Cost</th>
                                                         <th>Tax</th>
                                                         <th>Total</th>
-                                                        <th>Add Line Item</th>
-                                                        <th></th>
+                                                        <th>Menu</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr th:each="sale: ${salesInvoices}">
-                                                            <td class="text-truncate" th:text="${sale.invoiceNumber}"></td>
-                                                            <td class="text-truncate" th:text="${sale.invoiceDate}"></td>
-                                                            <td class="text-truncate" th:text="${sale.clientVendor.companyName}"></td>
-                                                            <td class="text-truncate" th:text="${sale.price}"></td>
-                                                            <td class="text-truncate" th:text="${sale.tax}"></td>
-                                                            <td class="text-truncate" th:text="${sale.price + sale.tax}"></td>
+                                                          <tr th:each="purchase:${purchaseInvoices}">
+                                                            <td th:text="${purchase.invoiceNumber}"  class="text-truncate" ></td>
+                                                            <td th:text="${purchase.invoiceDate}" class="text-truncate" ></td>
+                                                            <td th:text="${purchase.clientVendor.companyName}" ></td>
+                                                            <td th:text="${purchase.price}"  ></td>
+                                                            <td th:text="${purchase.tax}"  ></td>
+                                                            <td th:text="${purchase.price + purchase.tax}"></td>
                                                             <td>
                                                                 <a class="ft-list" >
                                                                 </a>
                                                             </td>
                                                             <td>
-                                                                <!--                                                               <form action="#" data-th-action="@{/invoice/approveDeleteToInvoice/{id}(id=${salesInvoice.getInvoiceNo()})}" method="post">-->
-
+<!--                                                        todo: Vitaly Bahrom        <form action="#" data-th-action="@{/invoice/approveDeleteToInvoice/{id}(id=${purchaseInvoice.getInvoiceNo()})}"-->
                                                                 <form>
                                                                     <button
                                                                             class="btn btn-success mb-2 mb-sm-0 mr-sm-2"
@@ -76,7 +76,6 @@
                                                                             type="submit" name="action" value="toInvoice">To Invoice
                                                                     </button>
                                                                 </form>
-
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -93,12 +92,13 @@
             </div>
         </div>
     </div>
-    </div>
-    <footer th:replace="fragments :: page_footer"></footer>
-    <div class="sidenav-overlay"></div>
-    <div class="drag-target"></div>
-    <script th:src="@{/js/dashboard2.js}"></script>
-    <script th:src="@{/assets/js/scripts.js}"></script>
+</div>
+
+<footer th:replace="fragments :: page_footer"></footer>
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
+<script th:src="@{/js/dashboard2.js}"></script>
+<script th:src="@{/assets/js/scripts.js}"></script>
 </body>
 
 </html>

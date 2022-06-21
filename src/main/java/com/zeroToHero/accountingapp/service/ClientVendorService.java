@@ -2,6 +2,7 @@ package com.zeroToHero.accountingapp.service;
 
 
 import com.zeroToHero.accountingapp.dto.ClientVendorDTO;
+import com.zeroToHero.accountingapp.entity.ClientVendor;
 import com.zeroToHero.accountingapp.enums.CompanyType;
 
 import java.util.List;
@@ -15,4 +16,7 @@ public interface ClientVendorService {
     ClientVendorDTO findByEmail(String email);
 
     List<ClientVendorDTO> findAllByCompanyType(CompanyType companyType);
+
+    ClientVendor findVendorById(Long vendorId);
+
 }

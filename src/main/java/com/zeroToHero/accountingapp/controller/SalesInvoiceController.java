@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/invoice")
+@RequestMapping("/sale")
 public class SalesInvoiceController {
 
     private final InvoiceService invoiceService;
@@ -25,13 +25,13 @@ public class SalesInvoiceController {
         this.companyService = companyService;
     }
 
-    @GetMapping("/salesInvoiceList")
+    @GetMapping("/list")
     public String salesInvoiceList(Model model) {
         model.addAttribute("salesInvoices", invoiceService.listAllByInvoiceType(InvoiceType.SALE));
         return "/invoice/sales-invoice-list";
     }
 
-    @GetMapping("/salesInvoiceCreate")
+    @GetMapping("/create")
     public String salesInvoiceCreate() {
 
         return "/invoice/sales-invoice-create";

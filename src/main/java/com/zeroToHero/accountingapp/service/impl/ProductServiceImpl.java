@@ -28,6 +28,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> listAllProducts() {
+        return productRepository.findAll().stream().map(p->mapperUtil.convert(p,new ProductDTO())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> listAllProductsByCompany() {
         // TODO security by username or email
         // String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User loggedInUser = userRepository.findByEmail("manager1@company2.com");

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductDTO> listAllProducts();
+    List<ProductDTO> listAllProductsByCompany();
     ProductDTO findById(Long id);
 
     void save(ProductDTO productDTO);

@@ -7,6 +7,7 @@ import com.zeroToHero.accountingapp.enums.InvoiceType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,6 +39,7 @@ public class InvoiceDTO {
     private BigDecimal price;
     private BigDecimal total;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate invoiceDate;
 
     private boolean enabled;

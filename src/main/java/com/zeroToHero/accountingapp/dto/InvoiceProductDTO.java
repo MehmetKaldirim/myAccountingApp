@@ -37,14 +37,10 @@ public class InvoiceProductDTO {
 
     @NotBlank
     @Size(min = 0)
-    private BigDecimal total;
-
-    @NotBlank
-    @Size(min = 0)
     private BigDecimal profit;
 
-    Product product;
-    Invoice invoice;
+    ProductDTO productDTO;
+    InvoiceDTO invoiceDTO;
 
 
 }

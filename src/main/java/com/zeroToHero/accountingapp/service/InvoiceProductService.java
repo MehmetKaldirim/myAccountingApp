@@ -12,8 +12,10 @@ import java.util.List;
 public interface InvoiceProductService {
 
     List<InvoiceProduct> listAll();
-
     List<InvoiceProductDTO> listAllByInvoiceType(InvoiceType invoiceType);
-
     void delete(Long id);
+    void save (InvoiceProductDTO dto);
+    List<InvoiceProductDTO> saveTemp(InvoiceProductDTO dto);
+    public void deleteTemp(Long id);
+    public List<InvoiceProductDTO> listAllTempProducts();
 }

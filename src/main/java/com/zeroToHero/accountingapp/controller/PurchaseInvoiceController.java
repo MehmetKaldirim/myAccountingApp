@@ -1,45 +1,91 @@
 package com.zeroToHero.accountingapp.controller;
 
 
+import com.zeroToHero.accountingapp.dto.ClientVendorDTO;
+import com.zeroToHero.accountingapp.dto.InvoiceDTO;
+import com.zeroToHero.accountingapp.dto.InvoiceProductDTO;
+import com.zeroToHero.accountingapp.enums.CompanyType;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
+
+import com.zeroToHero.accountingapp.exception.RecordNotFoundException;
 import com.zeroToHero.accountingapp.service.ClientVendorService;
 import com.zeroToHero.accountingapp.service.InvoiceProductService;
 import com.zeroToHero.accountingapp.service.InvoiceService;
+import com.zeroToHero.accountingapp.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+
 
 @Controller
-@RequestMapping("/invoice")
+@RequestMapping("/purchase")
 public class PurchaseInvoiceController {
-
+    private InvoiceDTO tempInvoiceDTO = new InvoiceDTO();
 
     final private InvoiceService invoiceService;
     final private InvoiceProductService invoiceProductService;
     final private ClientVendorService clientVendorService;
+    final private ProductService productService;
 
-    public PurchaseInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
+    public PurchaseInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ProductService productService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
+        this.productService = productService;
     }
 
-    @GetMapping("/purchaseInvoiceList")
+    @GetMapping("/list")
     public String purchaseInvoiceList(Model model) {
+        model.addAttribute("invoice",tempInvoiceDTO = new InvoiceDTO());
+        model.addAttribute("clientVendor",new ClientVendorDTO());
+        model.addAttribute("vendors",clientVendorService.findAllByCompanyType(CompanyType.VENDOR));
+
         model.addAttribute("purchaseInvoices", invoiceService.listAllByInvoiceType(InvoiceType.PURCHASE));
         return "invoice/purchase-invoice-list";
     }
-/*
-    @GetMapping("/purchaseInvoiceCreate")
-    public String purchaseInvoiceCreate(Model model) {
-        InvoiceDTO newInvoice = new InvoiceDTO();
-        System.out.println(newInvoice.getId());
-        // TODO Vitaly Bahrom for new ID
-        model.addAttribute("newInvoice", new InvoiceDTO());
 
-        model.addAttribute("vendors", clientVendorService.findAllByCompanyType(CompanyType.VENDOR));
-        return "invoice/purchase-invoice-create";
 
-    }*/
+
+
+    //@GetMapping(value = {"/create","/create/{id}"}) //check baldung optional path variables
+    @GetMapping("/create") //check baldung optional path variables
+    public String addInvoice(@RequestParam Long id, Model model) throws RecordNotFoundException {
+        tempInvoiceDTO.setClientVendor(clientVendorService.findVendorById(id));
+        tempInvoiceDTO.setInvoiceNumber(invoiceService.createInvoiceNumber(InvoiceType.PURCHASE));
+        tempInvoiceDTO.setInvoiceDate(LocalDate.now());
+        model.addAttribute("invoice",tempInvoiceDTO);
+        model.addAttribute("vendors",clientVendorService.findAllByCompanyType(CompanyType.VENDOR));
+        model.addAttribute("products",productService.listAllProducts());
+        model.addAttribute("invoiceProduct", new InvoiceProductDTO());
+        model.addAttribute("tempProducts",invoiceProductService.listAllTempProducts());
+        return "/invoice/purchase-invoice-create";
+
+    }
+
+    @PostMapping("/insertProduct")
+    public String insertProduct(InvoiceProductDTO invoiceProductDTO) {
+        invoiceProductDTO.setName(invoiceProductDTO.getProductDTO().getName());
+        invoiceProductService.saveTemp(invoiceProductDTO);
+        //tempInvoiceDTO.getInvoiceProductList().add(invoiceProductDTO);
+        return "redirect:/purchase/create?id="+tempInvoiceDTO.getClientVendor().getId();
+    }
+
+    @GetMapping("/deleteProduct/{id}")
+    public String deleteProduct(@PathVariable("id") Long id) {
+        System.out.println("here in controller delete");
+        invoiceProductService.deleteTemp(id);
+        return "/invoice/purchase-invoice-create";
+    }
+
+    @PostMapping("/saveInvoice")
+    public String saveInvoice(Model model) throws RecordNotFoundException{
+        tempInvoiceDTO.setInvoiceType(InvoiceType.PURCHASE);
+        invoiceService.save(tempInvoiceDTO);
+        return "redirect:/purchase/list";
+        //return "redirect:/purchase/create?id="+tempInvoiceDTO.getClientVendor().getId();
+    }
+
+
 }

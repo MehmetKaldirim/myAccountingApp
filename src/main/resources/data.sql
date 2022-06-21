@@ -60,7 +60,10 @@ VALUES (5, '2022-01-15 00:00:00', FALSE, 5, '2022-01-15 00:00:00', 'Electronics'
        (9, '2022-05-15 00:00:00', FALSE, 9, '2022-05-15 00:00:00', 'Sports', TRUE, 10, 'Bike', 1, 'ACTIVE', 50, 10, 'PCS', 3, 4),
        (9, '2022-05-15 00:00:00', FALSE, 9, '2022-05-15 00:00:00', 'Sports', TRUE, 10, 'Racket', 1, 'ACTIVE', 50, 10, 'PCS', 3, 4),
        (9, '2022-05-15 00:00:00', FALSE, 9, '2022-05-15 00:00:00', 'Sports', TRUE, 10, 'Kimono', 1, 'ACTIVE', 50, 10, 'PCS', 3, 4),
-       (9, '2022-05-15 00:00:00', FALSE, 9, '2022-05-15 00:00:00', 'Sports', TRUE, 10, 'Paddle', 1, 'ACTIVE', 50, 10, 'PCS', 3, 4);
+       (9, '2022-05-15 00:00:00', FALSE, 9, '2022-05-15 00:00:00', 'Sports', TRUE, 10, 'Paddle', 1, 'ACTIVE', 50, 10, 'PCS', 3, 4),
+       (7, '2022-01-15 00:00:00', FALSE, 7, '2022-01-15 00:00:00', 'Computer', TRUE, 10, 'Scanner', 1, 'ACTIVE', 50, 10, 'PCS', 2, 3),
+       (7, '2022-02-15 00:00:00', FALSE, 7, '2022-02-15 00:00:00', 'Computer', TRUE, 10, 'Scanner', 1, 'ACTIVE', 50, 10, 'PCS', 2, 3),
+       (7, '2022-03-15 00:00:00', FALSE, 7, '2022-03-15 00:00:00', 'Computer', TRUE, 10, 'Scanner', 1, 'ACTIVE', 50, 10, 'PCS', 2, 3);
 
 
 INSERT INTO invoice_product (created_by, created_time, is_deleted, updated_by, updated_time, name, price, profit, qty, tax, invoice_id, product_id)
@@ -123,7 +126,10 @@ VALUES ('2022-01-15 00:00:00', 50, 1000, 50, 1),
        ('2022-05-15 00:00:00', 50, 800, 50, 21),
        ('2022-05-15 00:00:00', 50, 100, 50, 22),
        ('2022-05-15 00:00:00', 50, 200, 50, 23),
-       ('2022-05-15 00:00:00', 50, 80, 50, 24);
+       ('2022-05-15 00:00:00', 50, 80, 50, 24),
+       ('2022-01-15 00:00:00', 50, 100, 50, 25),
+       ('2022-02-15 00:00:00', 50, 200, 50, 26),
+       ('2022-03-15 00:00:00', 50, 300, 50, 27);
 
 
 INSERT INTO payment (created_by, created_time, is_deleted, updated_by, updated_time, amount, institution_id, is_paid, month, year, company_id)
