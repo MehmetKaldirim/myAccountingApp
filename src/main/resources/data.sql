@@ -6,10 +6,24 @@ VALUES (1, '2022-05-01 00:00:00', FALSE, 1, '2022-05-01 00:00:00', 'Street1 ', '
 
 
 INSERT INTO client_vendor (created_by, created_time, is_deleted, updated_by, updated_time, company_name, phone, email, address, zip_code, enabled, type, company_id, state_id)
-VALUES (2, '2021-05-02 00:00:00', FALSE, 2, '2021-05-01 00:00:00', 'Vendor1', '1234567890', 'vendor1@email.com', 'Street 1.', '35242', TRUE, 'VENDOR', 1, 'ALABAMA'),
-       (2, '2021-05-02 00:00:00', FALSE, 2, '2021-05-02 00:00:00', 'Client1', '0987654321', 'client1@email.com', 'Street 2', '38704', FALSE, 'CLIENT', 2, 'ARIZONA'),
-       (3, '2021-05-03 00:00:00', FALSE, 3, '2021-05-03 00:00:00', 'Client2', '7894561230', 'client2@email.com', 'Street 3', '33027', TRUE, 'CLIENT', 3, 'FLORIDA'),
-       (3, '2021-05-03 00:00:00', FALSE, 3, '2021-05-03 00:00:00', 'Client3', '7894561230', 'client3@email.com', 'Street 4', '33027', TRUE, 'CLIENT', 3, 'FLORIDA');
+VALUES (2, '2021-05-02 00:00:00', FALSE, 2, '2021-05-02 00:00:00', 'Vendor1', '1234567890', 'vendor1@email.com', 'Street 1.', '35242', TRUE, 'VENDOR', 2, 'ARIZONA'),
+       (2, '2021-05-02 00:00:00', FALSE, 2, '2021-05-02 00:00:00', 'Vendor2', '1234567891', 'vendor2@email.com', 'Street 2.', '35242', TRUE, 'VENDOR', 2, 'ARIZONA'),
+       (2, '2021-05-02 00:00:00', FALSE, 2, '2021-05-02 00:00:00', 'Vendor3', '1234567891', 'vendor3@email.com', 'Street 3.', '35242', TRUE, 'VENDOR', 2, 'ARIZONA'),
+       (2, '2021-05-02 00:00:00', FALSE, 2, '2021-05-02 00:00:00', 'Client1', '0987654321', 'client1@email.com', 'Street 1', '38704', FALSE, 'CLIENT', 2, 'ARIZONA'),
+       (2, '2021-05-02 00:00:00', FALSE, 2, '2021-05-02 00:00:00', 'Client2', '0987654311', 'client2@email.com', 'Street 2', '38704', FALSE, 'CLIENT', 2, 'ARIZONA'),
+       (2, '2021-05-02 00:00:00', FALSE, 2, '2021-05-02 00:00:00', 'Client3', '0987654331', 'client3@email.com', 'Street 3', '38704', FALSE, 'CLIENT', 2, 'ARIZONA'),
+       (3, '2021-05-03 00:00:00', FALSE, 2, '2021-05-03 00:00:00', 'Vendor4', '1234567891', 'vendor4@email.com', 'Street 4.', '35242', TRUE, 'VENDOR', 3, 'FLORIDA'),
+       (3, '2021-05-03 00:00:00', FALSE, 2, '2021-05-03 00:00:00', 'Vendor5', '1234567891', 'vendor5@email.com', 'Street 5.', '35242', TRUE, 'VENDOR', 3, 'FLORIDA'),
+       (3, '2021-05-03 00:00:00', FALSE, 2, '2021-05-03 00:00:00', 'Vendor6', '1234567891', 'vendor6@email.com', 'Street 6.', '35242', TRUE, 'VENDOR', 3, 'FLORIDA'),
+       (3, '2021-05-03 00:00:00', FALSE, 3, '2021-05-03 00:00:00', 'Client4', '7894561230', 'client4@email.com', 'Street 4', '33027', TRUE, 'CLIENT', 3, 'FLORIDA'),
+       (3, '2021-05-03 00:00:00', FALSE, 3, '2021-05-03 00:00:00', 'Client5', '7894561240', 'client5@email.com', 'Street 5', '33027', TRUE, 'CLIENT', 3, 'FLORIDA'),
+       (3, '2021-05-03 00:00:00', FALSE, 3, '2021-05-03 00:00:00', 'Client6', '7894561241', 'client6@email.com', 'Street 6', '33027', TRUE, 'CLIENT', 3, 'FLORIDA'),
+       (4, '2021-05-04 00:00:00', FALSE, 2, '2021-05-04 00:00:00', 'Vendor7', '2234567891', 'vendor7@email.com', 'Street 7.', '35242', TRUE, 'VENDOR', 4, 'FLORIDA'),
+       (4, '2021-05-04 00:00:00', FALSE, 2, '2021-05-04 00:00:00', 'Vendor8', '2234567891', 'vendor8@email.com', 'Street 8.', '35242', TRUE, 'VENDOR', 4, 'FLORIDA'),
+       (4, '2021-05-04 00:00:00', FALSE, 2, '2021-05-04 00:00:00', 'Vendor9', '2234567891', 'vendor9@email.com', 'Street 9.', '35242', TRUE, 'VENDOR', 4, 'FLORIDA'),
+       (4, '2021-05-04 00:00:00', FALSE, 3, '2021-05-04 00:00:00', 'Client7', '8894561230', 'client7@email.com', 'Street 7', '33027', TRUE, 'CLIENT', 4, 'FLORIDA'),
+       (4, '2021-05-04 00:00:00', FALSE, 3, '2021-05-04 00:00:00', 'Client8', '8894561240', 'client8@email.com', 'Street 8', '33027', TRUE, 'CLIENT', 4, 'FLORIDA'),
+       (4, '2021-05-04 00:00:00', FALSE, 3, '2021-05-04 00:00:00', 'Client9', '8894561241', 'client9@email.com', 'Street 9', '33027', TRUE, 'CLIENT', 4, 'FLORIDA');
 
 
 INSERT INTO category (created_by, created_time, is_deleted, updated_by, updated_time, description, enabled, company_id)
@@ -19,21 +33,21 @@ VALUES (2, '2022-05-11 00:00:00', FALSE, 2, '2022-05-11 00:00:00', 'Electronics'
 
 
 INSERT INTO invoice (created_by, created_time, is_deleted, updated_by, updated_time, enabled, invoice_date, invoice_number, invoice_status, invoice_type, sptable_id, company_id)
-VALUES (5, '2022-05-16 00:00:00', FALSE, 5, '2022-05-16 00:00:00', TRUE, '05/16/2022', 'P-INV001', 'APPROVED', 'PURCHASE', 1, 2),
-       (5, '2022-05-20 00:00:00', FALSE, 5, '2022-05-20 00:00:00', TRUE, '05/20/2022', 'P-INV002', 'APPROVED', 'PURCHASE', 1, 2),
-       (5, '2022-06-10 00:00:00', FALSE, 5, '2022-06-10 00:00:00', TRUE, '06/10/2022', 'S-INV003', 'APPROVED', 'SALE', 2, 2),
-       (5, '2022-06-10 00:00:00', FALSE, 5, '2022-06-10 00:00:00', TRUE, '06/10/2022', 'S-INV004', 'APPROVED', 'SALE', 3, 2),
-       (5, '2022-06-11 00:00:00', FALSE, 5, '2022-06-11 00:00:00', TRUE, '06/10/2022', 'S-INV005', 'APPROVED', 'SALE', 4, 2),
-       (7, '2022-05-12 00:00:00', FALSE, 7, '2022-05-12 00:00:00', TRUE, '05/12/2022', 'P-INV001', 'APPROVED', 'PURCHASE', 1, 3),
-       (7, '2022-05-15 00:00:00', FALSE, 7, '2022-05-10 00:00:00', TRUE, '05/15/2022', 'P-INV002', 'APPROVED', 'PURCHASE', 1, 3),
-       (7, '2022-06-11 00:00:00', FALSE, 7, '2022-06-11 00:00:00', TRUE, '06/11/2022', 'S-INV001', 'APPROVED', 'SALE', 2, 3),
-       (7, '2022-06-12 00:00:00', FALSE, 7, '2022-06-12 00:00:00', TRUE, '06/12/2022', 'S-INV002', 'APPROVED', 'SALE', 2, 3),
-       (7, '2022-06-13 00:00:00', FALSE, 7, '2022-06-13 00:00:00', TRUE, '06/13/2022', 'S-INV003', 'APPROVED', 'SALE', 2, 3),
-       (9, '2022-05-12 00:00:00', FALSE, 9, '2022-05-12 00:00:00', TRUE, '05/12/2022', 'P-INV001', 'APPROVED', 'PURCHASE', 1, 4),
-       (9, '2022-05-13 00:00:00', FALSE, 9, '2022-05-13 00:00:00', TRUE, '05/13/2022', 'P-INV002', 'APPROVED', 'PURCHASE', 1, 4),
-       (9, '2022-06-11 00:00:00', FALSE, 9, '2022-06-11 00:00:00', TRUE, '06/11/2022', 'S-INV001', 'APPROVED', 'SALE', 3, 4),
-       (9, '2022-06-12 00:00:00', FALSE, 9, '2022-06-12 00:00:00', TRUE, '06/12/2022', 'S-INV002', 'APPROVED', 'SALE', 3, 4),
-       (9, '2022-06-13 00:00:00', FALSE, 9, '2022-06-13 00:00:00', TRUE, '06/13/2022', 'S-INV003', 'APPROVED', 'SALE', 3, 4);
+VALUES (5, '2022-05-16 00:00:00', FALSE, 5, '2022-05-16 00:00:00', TRUE, '05/16/2022', 'P-INV1', 'APPROVED', 'PURCHASE', 1, 2),
+       (5, '2022-05-20 00:00:00', FALSE, 5, '2022-05-20 00:00:00', TRUE, '05/20/2022', 'P-INV2', 'APPROVED', 'PURCHASE', 1, 2),
+       (5, '2022-06-10 00:00:00', FALSE, 5, '2022-06-10 00:00:00', TRUE, '06/10/2022', 'S-INV3', 'APPROVED', 'SALE', 2, 2),
+       (5, '2022-06-10 00:00:00', FALSE, 5, '2022-06-10 00:00:00', TRUE, '06/10/2022', 'S-INV4', 'APPROVED', 'SALE', 3, 2),
+       (5, '2022-06-11 00:00:00', FALSE, 5, '2022-06-11 00:00:00', TRUE, '06/10/2022', 'S-INV5', 'APPROVED', 'SALE', 4, 2),
+       (7, '2022-05-12 00:00:00', FALSE, 7, '2022-05-12 00:00:00', TRUE, '05/12/2022', 'P-INV1', 'APPROVED', 'PURCHASE', 1, 3),
+       (7, '2022-05-15 00:00:00', FALSE, 7, '2022-05-10 00:00:00', TRUE, '05/15/2022', 'P-INV2', 'APPROVED', 'PURCHASE', 1, 3),
+       (7, '2022-06-11 00:00:00', FALSE, 7, '2022-06-11 00:00:00', TRUE, '06/11/2022', 'S-INV1', 'APPROVED', 'SALE', 2, 3),
+       (7, '2022-06-12 00:00:00', FALSE, 7, '2022-06-12 00:00:00', TRUE, '06/12/2022', 'S-INV2', 'APPROVED', 'SALE', 2, 3),
+       (7, '2022-06-13 00:00:00', FALSE, 7, '2022-06-13 00:00:00', TRUE, '06/13/2022', 'S-INV3', 'APPROVED', 'SALE', 2, 3),
+       (9, '2022-05-12 00:00:00', FALSE, 9, '2022-05-12 00:00:00', TRUE, '05/12/2022', 'P-INV1', 'APPROVED', 'PURCHASE', 1, 4),
+       (9, '2022-05-13 00:00:00', FALSE, 9, '2022-05-13 00:00:00', TRUE, '05/13/2022', 'P-INV2', 'APPROVED', 'PURCHASE', 1, 4),
+       (9, '2022-06-11 00:00:00', FALSE, 9, '2022-06-11 00:00:00', TRUE, '06/11/2022', 'S-INV1', 'APPROVED', 'SALE', 3, 4),
+       (9, '2022-06-12 00:00:00', FALSE, 9, '2022-06-12 00:00:00', TRUE, '06/12/2022', 'S-INV2', 'APPROVED', 'SALE', 3, 4),
+       (9, '2022-06-13 00:00:00', FALSE, 9, '2022-06-13 00:00:00', TRUE, '06/13/2022', 'S-INV3', 'APPROVED', 'SALE', 3, 4);
 
 
 INSERT INTO product (created_by, created_time, is_deleted, updated_by, updated_time, description, enabled, low_limit_alert, name, new_column, product_status, qty, tax, unit, category_id, company_id)
