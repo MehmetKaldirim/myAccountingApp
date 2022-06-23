@@ -18,11 +18,13 @@ import java.time.LocalDate;
 @Setter
 @Where(clause = "is_deleted=false")
 public class Company extends BaseEntity {
+
     private String title;
     private String address1;
     private String address2;
     private String zip;
     private String representative;
+    @Column(unique = true, nullable = false)
     private String email;
     @Column(columnDefinition = "DATE")
     private LocalDate establishmentDate;

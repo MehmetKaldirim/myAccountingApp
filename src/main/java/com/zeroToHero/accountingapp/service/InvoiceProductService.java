@@ -18,4 +18,6 @@ public interface InvoiceProductService {
     List<InvoiceProductDTO> saveTemp(InvoiceProductDTO dto);
     public void deleteTemp(Long id);
     public List<InvoiceProductDTO> listAllTempProducts();
+
+    void clearTempList();
 }

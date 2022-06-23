@@ -16,13 +16,22 @@
             <div class="content-wrapper">
                 <section class="users-list-wrapper">
                     <!-- ADD PURCHASE INVOICE LINK BEGIN -->
-                    <div class="users-list-filter d-flex justify-content-end">
+                    <div class="users-list-filter d-flex justify-content-begin">
                         <form action="#" th:object="${clientVendor}" method="get" th:action="@{/purchase/create}">
-                            <div class="form-row justify-content-end" >
+                            <div class="form-row justify-content-begin" >
+
+                                <div class="col-12 col-md-3">
+                                    <div class="form-group">
+                                        <label for="create" class="form-group">CREATE</label>
+                                        <button type="submit" name="action" value="createInvoice" id="create"
+                                                class="btn btn-success" >CREATE</button>
+                                    </div>
+                                </div>
                                 <div class="col-12 col-md-4">
                                     <div class="form-group">
-                                        <label for="clientvendor">SELECT VENDOR</label>
+                                        <label for="clientvendor" class="form-group">SELECT VENDOR</label>
                                         <select th:field="*{id}" class="custom-select" required="required" id="clientvendor">
+
                                             <option th:value=" ''" th:text="Select"></option>
                                             <option th:each="vendor : ${vendors}" th:value="${vendor.id}"
                                                     th:text="${vendor.CompanyName}"></option>
@@ -30,15 +39,8 @@
 
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-3">
-                                    <div class="form-group">
-                                        <label for="create">CREATE</label>
-                                        <button type="submit" name="action" value="createInvoice" id="create"
-                                                class="btn btn-success bg-light-success mb-1"
-                                        >CREATE</button>
-                                    </div>
-                                </div>
                             </div>
+
                         </form>
                     </div>
                     <!-- ADD PURCHASE INVOICE LINK END -->

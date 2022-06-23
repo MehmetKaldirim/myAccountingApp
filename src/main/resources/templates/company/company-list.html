@@ -71,13 +71,13 @@
                                                         <td th:text="${company.phone}"></td>
                                                         <td th:text="${company.zip}"></td>
                                                         <td th:text="${company.state}"></td>
-                                                        <td th:text="${company.companyStatus}"></td>
+                                                        <td>
                                                         <span
-
-                                                                class="badge bg-light-success"></span>
+                                                                th:if="'Enabled' == ${company.companyStatus.value}"
+                                                                class="badge bg-light-success">Enabled</span>
                                                         <span
-
-                                                                class="badge bg-light-DANGER"></span>
+                                                                th:if="'Disabled' == ${company.companyStatus.value}"
+                                                                class="badge bg-light-DANGER">Disabled</span>
                                                         </td>
                                                         <!--<td></td>-->
                                                         <td>

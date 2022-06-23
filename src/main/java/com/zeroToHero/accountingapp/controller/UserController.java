@@ -83,11 +83,9 @@ public class UserController {
     @PostMapping("/update")
     public String updateUser(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-
             model.addAttribute("roles", roleService.listAllRoles());
             model.addAttribute("companies", companyService.listAllCompanies());
             model.addAttribute("UserStatus", UserStatus.values());
-
             return "/user/user-update";
 
         }
@@ -104,7 +102,7 @@ public class UserController {
 
         userService.delete(email);
 
-        return "user/list";
+        return "redirect:/user/list";
     }
 
 

@@ -72,10 +72,18 @@ public class InvoiceProductServiceImpl implements InvoiceProductService{
 
     @Override
     public List<InvoiceProductDTO> saveTemp(InvoiceProductDTO invoice) {
+
         tempProductInvoice.add(invoice);
-        tempProductInvoice.forEach(System.out::println);
+
         return tempProductInvoice;
     }
+
+
+
+
+
+
+
 
     @Override
     public void deleteTemp(Long id) {
@@ -92,6 +100,10 @@ public class InvoiceProductServiceImpl implements InvoiceProductService{
         return tempProductInvoice;
     }
 
+    @Override
+    public void clearTempList() {
+        tempProductInvoice.clear();
+    }
 
 
 }
