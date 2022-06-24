@@ -87,10 +87,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService{
 
     @Override
     public void deleteTemp(Long id) {
-        System.out.println("Here we are in service imp delete product");
+        System.out.println("Here we are in service imp delete product and id is " + id);
+
         for(InvoiceProductDTO invp : tempProductInvoice){
             if(invp.getProductDTO().getId()==id){
+                System.out.println("yes they are same let delet it");
                 tempProductInvoice.remove(invp);
+                break;
             }
 
         }
@@ -103,6 +106,20 @@ public class InvoiceProductServiceImpl implements InvoiceProductService{
     @Override
     public void clearTempList() {
         tempProductInvoice.clear();
+    }
+
+    @Override
+    public InvoiceProductDTO findTempInvoiceProductById(Long id) {
+        System.out.println("do we have id here" + id);
+        for(InvoiceProductDTO invp : tempProductInvoice){
+            if(invp.getProductDTO().getId().equals(id)){
+                System.out.println("yes we are in find temp product now");
+                tempProductInvoice.remove(invp);
+                return invp;
+            }
+
+        }
+        return null;
     }
 
 

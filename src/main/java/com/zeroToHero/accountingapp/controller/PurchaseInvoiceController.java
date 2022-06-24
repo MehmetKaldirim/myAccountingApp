@@ -4,9 +4,11 @@ package com.zeroToHero.accountingapp.controller;
 import com.zeroToHero.accountingapp.dto.ClientVendorDTO;
 import com.zeroToHero.accountingapp.dto.InvoiceDTO;
 import com.zeroToHero.accountingapp.dto.InvoiceProductDTO;
+import com.zeroToHero.accountingapp.dto.UserDTO;
 import com.zeroToHero.accountingapp.enums.CompanyType;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 
+import com.zeroToHero.accountingapp.enums.UserStatus;
 import com.zeroToHero.accountingapp.exception.RecordNotFoundException;
 import com.zeroToHero.accountingapp.service.ClientVendorService;
 import com.zeroToHero.accountingapp.service.InvoiceProductService;
@@ -14,8 +16,10 @@ import com.zeroToHero.accountingapp.service.InvoiceService;
 import com.zeroToHero.accountingapp.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 
@@ -41,7 +45,6 @@ public class PurchaseInvoiceController {
         model.addAttribute("invoice",tempInvoiceDTO = new InvoiceDTO());
         model.addAttribute("clientVendor",new ClientVendorDTO());
         model.addAttribute("vendors",clientVendorService.findAllByCompanyType(CompanyType.VENDOR));
-
         model.addAttribute("purchaseInvoices", invoiceService.listAllByInvoiceType(InvoiceType.PURCHASE));
         return "invoice/purchase-invoice-list";
     }
@@ -71,12 +74,13 @@ public class PurchaseInvoiceController {
         //tempInvoiceDTO.getInvoiceProductList().add(invoiceProductDTO);
         return "redirect:/purchase/create?id="+tempInvoiceDTO.getClientVendor().getId();
     }
-
-    @GetMapping("/deleteProduct/{id}")
-    public String deleteProduct(@PathVariable("id") Long id) {
-        System.out.println("here in controller delete");
+    @GetMapping("/getTemp/{id}")
+    public String deleteTempProduct(@PathVariable("id") Long id, Model model) {
+        System.out.println("here in controller get delete");
+        //model.addAttribute("tempProducts",invoiceProductService.findTempInvoiceProductById(id));
         invoiceProductService.deleteTemp(id);
-        return "/invoice/purchase-invoice-create";
+        return "redirect:/purchase/create?id="+tempInvoiceDTO.getClientVendor().getId();
+
     }
 
     @PostMapping("/saveInvoice")
@@ -84,7 +88,6 @@ public class PurchaseInvoiceController {
         tempInvoiceDTO.setInvoiceType(InvoiceType.PURCHASE);
         invoiceService.save(tempInvoiceDTO);
         return "redirect:/purchase/list";
-        //return "redirect:/purchase/create?id="+tempInvoiceDTO.getClientVendor().getId();
     }
 
 

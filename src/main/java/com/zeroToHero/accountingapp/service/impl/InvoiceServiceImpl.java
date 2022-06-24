@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +47,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public List<InvoiceDTO> listAllByInvoiceType(InvoiceType invoiceType) {
-
+        Map<String,BigDecimal> map = new HashMap<>();
         User loggedInUser = userRepository.findByEmail("admin@company4.com");
         List<InvoiceDTO> listDTO = invoiceRepository.findAllByInvoiceTypeAndCompany(invoiceType, loggedInUser.getCompany()).stream()
                 .map(p -> mapperUtil.convert(p, new InvoiceDTO())).collect(Collectors.toList());;
@@ -67,7 +64,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         BigDecimal totalPrice = invoiceProductRepository.findAllByInvoiceId(id).stream().
                 map(p->p.getPrice())
                 .reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
-
 
         return totalPrice;
     }

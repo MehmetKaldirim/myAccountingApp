@@ -252,3 +252,5 @@
 </body>
 
 </html>
+
+<form th:href="@{/purchase/deleteProduct/{id}(id=${product.productDTO.id})}" th:object="${product}" method="post">

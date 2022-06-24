@@ -167,19 +167,23 @@
                                                                 </thead>
                                                                 <tbody>
                                                                 <tr th:each="product : ${tempProducts}">
+                                                                    <td hidden th:value="${product.id}"></td>
                                                                     <td th:text="${product.productDTO.name}"></td>
                                                                     <td th:text="'$ '+${product.price}"></td>
                                                                     <td th:text="${product.qty}"></td>
                                                                     <td th:text="'% '+${product.tax}"></td>
                                                                     <td th:text="'$ '+${(product.qty * product.price) + (product.qty * product.price * product.tax * 0.01)}"></td>
                                                                     <td>
-                                                                        <a th:href="@{/purchase/getTemp/{id}(id=${product.productDTO.id})}" >
-                                                                            <i class="btn btn-danger mb-2 mb-sm-0 mr-sm-2"
-                                                                               type="submit" name="action" value="delete" > Delete</i>
-                                                                        </a>
+                                                                        <form th:href="@{/purchase/deleteProduct}" th:object="${product}" method="post">
 
-
-
+                                                                            <input type="hidden" th:value="${product.productDTO.name}" name="name"/>
+                                                                            <input type="hidden" th:value="${product.price}" name="price"/>
+                                                                            <input type="hidden" th:value="${product.qty}" name="qty"/>
+                                                                            <input type="hidden" th:value="${product.tax}" name="tax"/>
+                                                                            <button type="submit" class="btn btn-default">
+                                                                                <i class="ft-trash"></i>
+                                                                            </button>
+                                                                        </form>
                                                                     </td>
                                                                 </tr>
                                                                 </tbody>
