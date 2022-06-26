@@ -2,7 +2,7 @@ package com.zeroToHero.accountingapp.enums;
 
 public enum InvoiceType {
 
-    PURCHASE("Purchase"), SALE("Sale");
+    PURCHASE("PURCHASE"), SALE("SALE");
 
     private final String value;
 

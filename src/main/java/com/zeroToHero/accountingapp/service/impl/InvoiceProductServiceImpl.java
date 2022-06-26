@@ -35,8 +35,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService{
     }
 
     @Override
+
     public List<InvoiceProduct> listAll() {
-        return null;
+        User user = userRepository.findByEmail("admin@company2.com");
+        List<InvoiceProduct> list = invoiceProductRepository.findAllByInvoice_Company(user.getCompany()).stream()
+                .collect(Collectors.toList());
+
+        return list;
     }
 
     @Override

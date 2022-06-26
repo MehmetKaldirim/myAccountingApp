@@ -52,7 +52,7 @@ public class PurchaseInvoiceController {
 
 
 
-    //@GetMapping(value = {"/create","/create/{id}"}) //check baldung optional path variables
+     //@GetMapping(value = {"/create","/create/{id}"}) //check baldung optional path variables
     @GetMapping("/create") //check baldung optional path variables
     public String addInvoice(@RequestParam Long id, Model model) throws RecordNotFoundException {
         tempInvoiceDTO.setClientVendor(clientVendorService.findVendorById(id));
@@ -73,13 +73,15 @@ public class PurchaseInvoiceController {
         invoiceProductService.saveTemp(invoiceProductDTO);
         //tempInvoiceDTO.getInvoiceProductList().add(invoiceProductDTO);
         return "redirect:/purchase/create?id="+tempInvoiceDTO.getClientVendor().getId();
+        //return "redirect:/purchase/create/"+tempInvoiceDTO.getClientVendor().getId();
     }
     @GetMapping("/getTemp/{id}")
     public String deleteTempProduct(@PathVariable("id") Long id, Model model) {
         System.out.println("here in controller get delete");
         //model.addAttribute("tempProducts",invoiceProductService.findTempInvoiceProductById(id));
         invoiceProductService.deleteTemp(id);
-        return "redirect:/purchase/create?id="+tempInvoiceDTO.getClientVendor().getId();
+        return "redirect:/purchase/create? id=" + tempInvoiceDTO.getClientVendor().getId();
+        //return "redirect:/purchase/create/" + tempInvoiceDTO.getClientVendor().getId();
 
     }
 

@@ -1,5 +1,8 @@
 package com.zeroToHero.accountingapp.controller;
 
+import com.zeroToHero.accountingapp.service.InvoiceProductService;
+import com.zeroToHero.accountingapp.service.StockDetailsService;
+import com.zeroToHero.accountingapp.service.impl.ReportServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,13 +12,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/report")
 public class ReportController {
 
-    @GetMapping("/list")
-    public String stockList(Model model) {
 
-        //model.addAttribute("salesInvoices", invoiceProductService.listAllByInvoiceType(InvoiceType.SALE));
+    private final StockDetailsService stockService;
+    private final InvoiceProductService invoiceProductService;
+    private final ReportServiceImpl reportServiceimpl;
+
+    public ReportController(StockDetailsService stockService, InvoiceProductService invoiceProductService, ReportServiceImpl reportServiceimpl) {
+        this.stockService = stockService;
+        this.invoiceProductService = invoiceProductService;
+        this.reportServiceimpl = reportServiceimpl;
+    }
 
 
+    @GetMapping("/stock")
+    public String stockReport(Model model){
+        model.addAttribute("invoiceProduct", invoiceProductService.listAll());
         return "/report/stock-report";
     }
 
+
+    @GetMapping("/profit")
+    public String profitLossReport(Model model){
+        model.addAttribute("profitLoss", reportServiceimpl.profitLoss());
+        return "/report/profit-loss-report";
+
+
+    }
 }
+
+
