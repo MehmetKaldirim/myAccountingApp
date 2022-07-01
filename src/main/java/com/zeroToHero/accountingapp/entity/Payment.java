@@ -1,5 +1,6 @@
 package com.zeroToHero.accountingapp.entity;
 
+import com.zeroToHero.accountingapp.enums.PaymentMonth;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
@@ -15,13 +16,14 @@ import java.time.Month;
 @Where(clause = "is_deleted=false")
 public class Payment extends BaseEntity {
 
-    @Column(columnDefinition = "DATE")
-    private LocalDate year;
-    private BigInteger amount;
+    // @Column(columnDefinition = "DATE")
+    private String year;
+    private Integer amount;
     private Boolean isPaid;
     private String institutionId;
+
     @Enumerated(EnumType.STRING)
-    private Month month;
+    private PaymentMonth month;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")

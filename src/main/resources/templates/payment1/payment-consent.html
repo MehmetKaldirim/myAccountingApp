@@ -240,7 +240,6 @@
                                         <h2 class="name">
                                             <a target="_blank" href="javascript:;"
                                                >
-                                                EZYBook LLC
 
                                             </a>
                                         </h2>
@@ -254,15 +253,15 @@
                                 <div class="row contacts">
                                     <div class="col invoice-to">
                                         <div class="text-gray-light">INVOICE TO:</div>
-                                        <h2 class="to" th:text="${company.title}"></h2>
+                                        <h2 class="to" ></h2>
                                         <div class="address">796 Silver Harbour, TX 79273, US</div>
                                         <div class="email"><a href="mailto:john@example.com" ></a>
                                         </div>
                                     </div>
                                     <div class="col invoice-details">
-                                        <h1 class="invoice-id" th:text="${payment.id}"></h1>
+                                        <h1 class="invoice-id">INVOICE 3-2-1</h1>
                                         <div class="date" ></div>
-                                        <div class="date" th:text="'Due Date: 30/' + ${payment.month} + '/' + ${payment.year}"></div>
+                                        <div class="date">Due Date: 30/10/2018</div>
                                     </div>
                                 </div>
                                 <table>
@@ -271,25 +270,25 @@
                                         <th>#</th>
                                         <th class="text-left">DESCRIPTION</th>
                                         <th class="text-right">MEMBERSHIP PRICE</th>
-                                        <th class="text-right">FEE</th>
+                                        <th class="text-right">EXTRA</th>
                                         <th class="text-right">TOTAL</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td class="no">1</td>
+                                        <td class="no">01</td>
                                         <td class="text-left">
                                             <h3>
                                                 <a target="_blank" href="javascript:;">
-                                                   EZYBook LLC Monthly Membership Payment
+                                                   Cydeo Monthly Membership Payment
                                                 </a>
                                             </h3>
                                             <a target="_blank" href="javascript:;">
                                                 MemberShip details
                                             </a> You can reach out your agreement details with this link</td>
-                                        <td class="unit" th:text="'$ ' + ${payment.amount*8/10}"></td>
-                                        <td class="extra" th:text="'$ ' + ${payment.amount*1/10}"></td>
-                                        <td class="total" th:text="'$ ' + ${payment.amount*9/10}"></td>
+                                        <td class="unit" ></td>
+                                        <td class="extra">£ 0</td>
+                                        <td class="total" ></td>
                                     </tr>
 <!--                                    <tr>-->
 <!--                                        <td class="no">01</td>-->
@@ -320,17 +319,17 @@
                                     <tr>
                                         <td colspan="2"></td>
                                         <td colspan="2">SUBTOTAL</td>
-                                        <td th:text="'$ ' + ${payment.amount*9/10}"></td>
+                                        <td ></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2"></td>
-                                        <td colspan="2">TAX 10%</td>
-                                        <td th:text="'$ ' + ${payment.amount*1/10}"></td>
+                                        <td colspan="2">TAX 25%</td>
+                                        <td ></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2"></td>
                                         <td colspan="2">GRAND TOTAL</td>
-                                        <td th:text="'$ ' + ${payment.amount}"></td>
+                                        <td ></td>
                                     </tr>
                                     </tfoot>
                                 </table>
@@ -345,14 +344,13 @@
                                 </div>
 
                                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-3 mt-sm-2">
-                                    <a th:href="@{/payment/newpayment/{id}(id=${payment.getId})}" type="button"
+                                    <a type="button"
                                             class="btn btn-primary mb-2 mb-sm-0 mr-sm-2"
                                     >
                                         PAY
                                     </a>
-                                    <a th:href="@{/payment/edit/{id}(id=${payment.getId()})}"
-                                    type="btn btn-primary mb-2 mb-sm-0 mr-sm-2" class="btn btn-secondary">EDIT
-                                    </a>
+                                    <button type="reset" class="btn btn-secondary">EDIT
+                                    </button>
                                 </div>
                             </main>
                             <footer>Invoice was created on a computer and is valid without the signature and seal.</footer>

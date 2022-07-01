@@ -42,7 +42,7 @@ public class PurchaseInvoiceController {
 
     @GetMapping("/list")
     public String purchaseInvoiceList(Model model) {
-        model.addAttribute("invoice",tempInvoiceDTO = new InvoiceDTO());
+        model.addAttribute("invoice",tempInvoiceDTO );
         model.addAttribute("clientVendor",new ClientVendorDTO());
         model.addAttribute("vendors",clientVendorService.findAllByCompanyType(CompanyType.VENDOR));
         model.addAttribute("purchaseInvoices", invoiceService.listAllByInvoiceType(InvoiceType.PURCHASE));

@@ -222,13 +222,15 @@
                     data-toggle="dropdown"><i class="ft-bar-chart"></i><span data-i18n="Components">Reporting</span></a>
                 <ul class="dropdown-menu">
 
-                    <li data-menu=""><a th:href="@{report/stock}" class="dropdown-item d-flex align-items-center"
-                                        data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
-                            data-i18n="Grid">Stock Report</span></a>
+                    <li data-menu="" ><a
+                            class="dropdown-item d-flex align-items-center" th:href="@{/report/list}"
+                            data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
+                            data-i18n="Chat">Stock Report</span></a>
                     </li>
-                    <li data-menu=""><a th:href="@{report/profit}" class="dropdown-item d-flex align-items-center"
-                                        data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
-                            data-i18n="Typography">Profit / Loss Report</span></a>
+                    <li data-menu="" ><a th:href="@{/report/profit}"
+                                         class="dropdown-item d-flex align-items-center"
+                                         data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
+                            data-i18n="Task Board">Profit / Loss Report</span></a>
                     </li>
 
                 </ul>
@@ -238,7 +240,7 @@
                     data-toggle="dropdown"><i class="ft-archive"></i><span data-i18n="Components">Administration</span></a>
                 <ul class="dropdown-menu">
 
-                    <li data-menu=""><a class="dropdown-item d-flex align-items-center"
+                    <li data-menu=""><a th:href="@{/payment/list}" class="dropdown-item d-flex align-items-center"
                                         data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
                             data-i18n="Grid">MemberShip Payment</span></a>
                     </li>

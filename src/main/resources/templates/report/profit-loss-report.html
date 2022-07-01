@@ -79,7 +79,33 @@
                                                         <th>Profit/Loss</th>
                                                     </tr>
                                                     </tfoot>
+                                                    <!--     Table by Products-->
                                                 </table>
+                                                <table id="example" class="table table-striped table-bordered file-export" style="width:100%">
+                                                    <thead>
+                                                    <tr>
+
+                                                        <th>Product Name</th>
+                                                        <th>Total Purchased Qty</th>
+                                                        <th>Total Sold Qty</th>
+                                                        <th>Profit/Loss</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    <tr th:each="pt : ${productsTotal}">
+                                                        <td th:text="${pt.name}"></td>
+                                                        <td th:text="${pt.purchasedQty}"></td>
+                                                        <td th:text="${pt.soldQty}"></td>
+
+                                                        <td th:text = "${pt.totalIncome-pt.totalCost}"></td>
+
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

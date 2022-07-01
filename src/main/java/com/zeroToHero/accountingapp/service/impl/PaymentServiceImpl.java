@@ -2,6 +2,7 @@ package com.zeroToHero.accountingapp.service.impl;
 
 
 import com.zeroToHero.accountingapp.dto.PaymentDTO;
+import com.zeroToHero.accountingapp.entity.Payment;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.PaymentRepository;
 import com.zeroToHero.accountingapp.service.PaymentService;
@@ -23,15 +24,15 @@ public class PaymentServiceImpl implements PaymentService {
   @Override
   public List<PaymentDTO> listAllPayments() {
     return paymentRepository.findAllBy().stream()
-        .map(p -> mapperUtil.convert(p, new PaymentDTO()))
-        .collect(Collectors.toList());
+            .map(p -> mapperUtil.convert(p, new PaymentDTO()))
+            .collect(Collectors.toList());
   }
 
   @Override
   public List<PaymentDTO> listAllByYear(String year) {
-    return paymentRepository.findAllByYear(year).stream()
-        .map(payment -> mapperUtil.convert(payment, new PaymentDTO()))
-        .collect(Collectors.toList());
+    return paymentRepository.findPaymentByYearOrderByMonth(year).stream()
+            .map(payment -> mapperUtil.convert(payment, new PaymentDTO()))
+            .collect(Collectors.toList());
   }
 
   @Override
@@ -45,5 +46,12 @@ public class PaymentServiceImpl implements PaymentService {
   @Override
   public PaymentDTO findPaymentById(Long id) {
     return mapperUtil.convert(paymentRepository.findPaymentById(id), new PaymentDTO());
+  }
+
+  @Override
+  public void chargePaymentById(Long id) {
+    Payment payment = paymentRepository.findPaymentById(id);
+    payment.setIsPaid(true);
+    paymentRepository.save(payment);
   }
 }
