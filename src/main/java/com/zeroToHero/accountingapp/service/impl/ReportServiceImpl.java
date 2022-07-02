@@ -1,16 +1,23 @@
 package com.zeroToHero.accountingapp.service.impl;
 
+import com.zeroToHero.accountingapp.dto.InvoiceDTO;
 import com.zeroToHero.accountingapp.dto.ProductDTO;
 import com.zeroToHero.accountingapp.dto.ReportDTO;
+import com.zeroToHero.accountingapp.dto.UserDTO;
+import com.zeroToHero.accountingapp.entity.Invoice;
 import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
+import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.InvoiceProductRepository;
+import com.zeroToHero.accountingapp.repository.InvoiceRepository;
 import com.zeroToHero.accountingapp.repository.UserRepository;
+import com.zeroToHero.accountingapp.service.InvoiceService;
 import com.zeroToHero.accountingapp.service.ReportService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,13 +26,17 @@ public class ReportServiceImpl implements ReportService {
 
     private final InvoiceProductRepository invoiceProductRepository;
     private final UserRepository userRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final MapperUtil mapperUtil;
+    private final InvoiceService invoiceService;
 
-    public ReportServiceImpl(InvoiceProductRepository invoiceProductRepository, UserRepository userRepository) {
+    public ReportServiceImpl(InvoiceProductRepository invoiceProductRepository, UserRepository userRepository, InvoiceRepository invoiceRepository, MapperUtil mapperUtil, InvoiceService invoiceService) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.userRepository = userRepository;
+        this.invoiceRepository = invoiceRepository;
+        this.mapperUtil = mapperUtil;
+        this.invoiceService = invoiceService;
     }
-
-
 
     @Override
     public Map<String, BigDecimal> profitLoss() {
@@ -93,6 +104,21 @@ public class ReportServiceImpl implements ReportService {
         });
         list.forEach(System.out::println);
         return list;
+    }
+
+    @Override
+    public List<InvoiceDTO> findLast3ByCompany() {
+        User user = userRepository.findByEmail("admin@company2.com");
+        List<InvoiceDTO> listDTO = invoiceRepository.findInvoice(user.getCompany().getTitle())
+                        .stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
+        listDTO.forEach(p -> p.setPrice((invoiceService.calculatePriceByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
+        listDTO.forEach(p -> p.setTax((invoiceService.calculateTaxByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
+
+
+        listDTO.forEach(System.out::println);
+
+
+        return listDTO;
     }
 
 

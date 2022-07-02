@@ -1,6 +1,7 @@
 package com.zeroToHero.accountingapp.controller;
 
 import com.zeroToHero.accountingapp.service.InvoiceProductService;
+import com.zeroToHero.accountingapp.service.ReportService;
 import com.zeroToHero.accountingapp.service.StockDetailsService;
 import com.zeroToHero.accountingapp.service.impl.ReportServiceImpl;
 import org.springframework.stereotype.Controller;
@@ -15,14 +16,13 @@ public class ReportController {
 
     private final StockDetailsService stockService;
     private final InvoiceProductService invoiceProductService;
-    private final ReportServiceImpl reportServiceimpl;
+    private final ReportService reportService;
 
-    public ReportController(StockDetailsService stockService, InvoiceProductService invoiceProductService, ReportServiceImpl reportServiceimpl) {
+    public ReportController(StockDetailsService stockService, InvoiceProductService invoiceProductService, ReportService reportService) {
         this.stockService = stockService;
         this.invoiceProductService = invoiceProductService;
-        this.reportServiceimpl = reportServiceimpl;
+        this.reportService = reportService;
     }
-
 
     @GetMapping("/stock")
     public String stockReport(Model model){
@@ -33,8 +33,8 @@ public class ReportController {
 
     @GetMapping("/profit")
     public String profitLossReport(Model model){
-        model.addAttribute("profitLoss", reportServiceimpl.profitLoss());
-        model.addAttribute("productsTotal", reportServiceimpl.calculateByProducts());
+        model.addAttribute("profitLoss", reportService.profitLoss());
+        model.addAttribute("productsTotal", reportService.calculateByProducts());
 
         return "/report/profit-loss-report";
 

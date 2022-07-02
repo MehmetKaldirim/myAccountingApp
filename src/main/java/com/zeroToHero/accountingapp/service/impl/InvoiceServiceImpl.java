@@ -48,7 +48,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceDTO> listAllByInvoiceType(InvoiceType invoiceType) {
         Map<String,BigDecimal> map = new HashMap<>();
-        User loggedInUser = userRepository.findByEmail("admin@company4.com");
+        User loggedInUser = userRepository.findByEmail("admin@company2.com");
         List<InvoiceDTO> listDTO = invoiceRepository.findAllByInvoiceTypeAndCompany(invoiceType, loggedInUser.getCompany()).stream()
                 .map(p -> mapperUtil.convert(p, new InvoiceDTO())).collect(Collectors.toList());;
 
@@ -109,7 +109,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public String createInvoiceNumber(InvoiceType invoiceType) {
         String invoiceNu = "";
-        User loggedInUser = userRepository.findByEmail("admin@company4.com");
+        User loggedInUser = userRepository.findByEmail("admin@company2.com");
 
         String previousInvNum = invoiceRepository.findAllByInvoiceTypeAndCompany(invoiceType,loggedInUser.getCompany())
                 .stream()
