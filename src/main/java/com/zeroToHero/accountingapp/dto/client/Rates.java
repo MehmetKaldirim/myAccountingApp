@@ -1,5 +1,5 @@
 
-package com.zeroToHero.accountingapp.dto;
+package com.zeroToHero.accountingapp.dto.client;
 
 import java.util.HashMap;
 import java.util.Map;
