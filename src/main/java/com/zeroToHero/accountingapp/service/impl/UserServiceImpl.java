@@ -1,6 +1,8 @@
 package com.zeroToHero.accountingapp.service.impl;
 
+import com.zeroToHero.accountingapp.dto.CompanyDTO;
 import com.zeroToHero.accountingapp.dto.UserDTO;
+import com.zeroToHero.accountingapp.entity.Company;
 import com.zeroToHero.accountingapp.entity.Product;
 import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.enums.UserStatus;
@@ -69,6 +71,12 @@ public class UserServiceImpl implements UserService {
     public UserDTO findByEmail(String email) {
         User user = userRepository.findByEmail(email);
         return mapperUtil.convert(user, new UserDTO());
+    }
+
+    @Override
+    public Company findCompanyByUserName() {
+        User user = userRepository.findByEmail("admin@company2.com");
+        return user.getCompany();
     }
 
 }

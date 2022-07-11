@@ -16,6 +16,9 @@ public interface InvoiceService {
 
     BigDecimal calculatePriceByInvoiceID(Long id);
     BigDecimal calculateTaxByInvoiceID(Long id);
+
+    BigDecimal calculateCostByInvoiceID(Long id);
+
     BigDecimal calculateProfitByInvoiceID(Long id);
 
     InvoiceDTO save(InvoiceDTO invoice);

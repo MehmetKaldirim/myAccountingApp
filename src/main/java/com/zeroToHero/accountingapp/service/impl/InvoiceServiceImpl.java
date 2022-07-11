@@ -52,7 +52,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<InvoiceDTO> listDTO = invoiceRepository.findAllByInvoiceTypeAndCompany(invoiceType, loggedInUser.getCompany()).stream()
                 .map(p -> mapperUtil.convert(p, new InvoiceDTO())).collect(Collectors.toList());;
 
-        listDTO.forEach(p -> p.setPrice((calculatePriceByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
+        listDTO.forEach(p -> p.setCost((calculatePriceByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
         listDTO.forEach(p -> p.setTax((calculateTaxByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
 
 
@@ -130,6 +130,20 @@ public class InvoiceServiceImpl implements InvoiceService {
         System.out.println(invoiceNu);
 
         return invoiceNu;
+    }
+
+
+    @Override
+    public BigDecimal calculateCostByInvoiceID(Long id) {
+        List<InvoiceProductDTO> invoiceProductListById = invoiceProductRepository.findAllByInvoiceId(id)
+                .stream().filter(p -> p.isEnabled())
+                .map(p -> mapperUtil.convert(p, new InvoiceProductDTO())).collect(Collectors.toList());
+        BigDecimal cost = BigDecimal.valueOf(0);
+        for (InvoiceProductDTO each : invoiceProductListById) {
+            BigDecimal currItemCost = each.getPrice().multiply(BigDecimal.valueOf(each.getQty()));
+            cost = cost.add(currItemCost);
+        }
+        return cost;
     }
 
 }

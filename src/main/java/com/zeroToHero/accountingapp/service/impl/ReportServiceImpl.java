@@ -5,6 +5,7 @@ import com.zeroToHero.accountingapp.dto.ProductDTO;
 import com.zeroToHero.accountingapp.dto.ReportDTO;
 import com.zeroToHero.accountingapp.dto.UserDTO;
 import com.zeroToHero.accountingapp.entity.Invoice;
+import com.zeroToHero.accountingapp.entity.InvoiceProduct;
 import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
@@ -13,6 +14,7 @@ import com.zeroToHero.accountingapp.repository.InvoiceRepository;
 import com.zeroToHero.accountingapp.repository.UserRepository;
 import com.zeroToHero.accountingapp.service.InvoiceService;
 import com.zeroToHero.accountingapp.service.ReportService;
+import com.zeroToHero.accountingapp.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,44 +31,43 @@ public class ReportServiceImpl implements ReportService {
     private final InvoiceRepository invoiceRepository;
     private final MapperUtil mapperUtil;
     private final InvoiceService invoiceService;
+    private final UserService userService;
 
-    public ReportServiceImpl(InvoiceProductRepository invoiceProductRepository, UserRepository userRepository, InvoiceRepository invoiceRepository, MapperUtil mapperUtil, InvoiceService invoiceService) {
+    public ReportServiceImpl(InvoiceProductRepository invoiceProductRepository, UserRepository userRepository, InvoiceRepository invoiceRepository, MapperUtil mapperUtil, InvoiceService invoiceService, UserService userService) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.userRepository = userRepository;
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.invoiceService = invoiceService;
+        this.userService = userService;
     }
 
     @Override
     public Map<String, BigDecimal> profitLoss() {
 
-        User user = userRepository.findByEmail("admin@company2.com");
+
 
         Map<String, BigDecimal> profitLoss = new HashMap<>();
 
 
-        BigDecimal totalCost = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE, user.getCompany()).stream().
+        BigDecimal totalCost = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE, userService.findCompanyByUserName()).stream().
                 map(p->p.getPrice()).
                 reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
 
-        BigDecimal totalSale = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE, user.getCompany()).stream().
+        BigDecimal totalSale = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE, userService.findCompanyByUserName()).stream().
                 map(p->p.getPrice()).
                 reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
 
-        BigDecimal totalTax = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE, user.getCompany()).stream().
+        BigDecimal totalTax = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE, userService.findCompanyByUserName()).stream().
                 map(p->p.getTax()).
                 reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
 
         profitLoss.put("totalCost", totalCost);
-        System.out.println("this is total cost =  "+ totalCost);
         profitLoss.put("totalSale", totalSale);
-        System.out.println("this is total sale =  " + totalSale);
         profitLoss.put("totalTax", totalTax);
-        System.out.println("this is total for tax =  " + totalTax);
 
         return profitLoss;
     }
@@ -82,11 +83,11 @@ public class ReportServiceImpl implements ReportService {
                     .map(product->product.getPrice()).
                     reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
-            BigDecimal purchasedQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE,user.getCompany())
+            Integer purchasedQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE,user.getCompany())
                     .stream()
                     .filter(product->product.getName().equals(p.getName()))
                     .map(product->product.getQty()).
-                    reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+                    reduce(0, (a, b) -> a + b);
 
             BigDecimal totalIncome = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,user.getCompany())
                     .stream()
@@ -94,31 +95,31 @@ public class ReportServiceImpl implements ReportService {
                     .map(product->product.getPrice()).
                     reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
-            BigDecimal soldQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,user.getCompany())
+            Integer soldQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,user.getCompany())
                     .stream()
                     .filter(product->product.getName().equals(p.getName()))
                     .map(product->product.getQty()).
-                    reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+                    reduce(0, (a, b) -> a + b);
 
             list.add(new ReportDTO(p.getName(),purchasedQTY,soldQTY,totalCost,totalIncome));
         });
-        list.forEach(System.out::println);
         return list;
     }
 
     @Override
     public List<InvoiceDTO> findLast3ByCompany() {
-        User user = userRepository.findByEmail("admin@company2.com");
-        List<InvoiceDTO> listDTO = invoiceRepository.findInvoice(user.getCompany().getTitle())
-                        .stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
-        listDTO.forEach(p -> p.setPrice((invoiceService.calculatePriceByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
-        listDTO.forEach(p -> p.setTax((invoiceService.calculateTaxByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
+        List<InvoiceDTO> listInvoiceDTO = invoiceRepository.findLast3InvoiceByDate(userService.findCompanyByUserName().getTitle())
+                .stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
+        listInvoiceDTO.forEach(p -> p.setCost((invoiceService.calculateCostByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
+        listInvoiceDTO.forEach(p -> p.setTax((p.getCost().multiply(BigDecimal.valueOf(0.07))).setScale(2, RoundingMode.CEILING)));
+        listInvoiceDTO.forEach(p -> p.setTotal(((p.getCost()).add(p.getTax())).setScale(2, RoundingMode.CEILING)));
+        return listInvoiceDTO;
+    }
 
+    @Override
+    public List<InvoiceProduct> findAllByCompany() {
 
-        listDTO.forEach(System.out::println);
-
-
-        return listDTO;
+        return invoiceProductRepository.findAllByInvoice_Company(userService.findCompanyByUserName());
     }
 
 

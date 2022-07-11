@@ -1,6 +1,8 @@
 package com.zeroToHero.accountingapp.service;
 
+import com.zeroToHero.accountingapp.dto.CompanyDTO;
 import com.zeroToHero.accountingapp.dto.UserDTO;
+import com.zeroToHero.accountingapp.entity.Company;
 
 import java.util.List;
 
@@ -17,4 +19,6 @@ public interface UserService {
     UserDTO findById(Long id);
 
     UserDTO findByEmail(String email);
+
+    Company findCompanyByUserName();
 }

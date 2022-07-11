@@ -69,8 +69,8 @@
                                                             <td    th:text="${ip.product.name}" class="text-truncate"></td>
                                                             <td    th:text="${ip.qty} + ' / '+${ip.product.unit.value}" ></td>
                                                             <td>
-                                                            <span  th:if="${ip.invoice.invoiceType.value == 'SALE'}"      th:text="${ip.invoice.invoiceType.value}" class="badge bg-light-success"></span>
-                                                            <span  th:unless="${ip.invoice.invoiceType.value == 'SALE'}"  th:text="${ip.invoice.invoiceType.value}" class="badge bg-light-blue"></span>
+                                                            <span  th:if="${ip.invoice.invoiceType.value == 'Sale'}"      th:text="${ip.invoice.invoiceType.value}" class="badge bg-light-success"></span>
+                                                            <span  th:unless="${ip.invoice.invoiceType.value == 'Sale'}"  th:text="${ip.invoice.invoiceType.value}" class="badge bg-light-blue"></span>
                                                             </td>
                                                             <td    th:text="${' $ '+ ip.price}"></td>
                                             </table>

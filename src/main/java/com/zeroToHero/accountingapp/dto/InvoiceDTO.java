@@ -26,7 +26,6 @@ public class InvoiceDTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String invoiceNumber;
 
     @NotNull
@@ -35,17 +34,26 @@ public class InvoiceDTO {
     @NotNull
     private InvoiceType invoiceType;
 
-    private BigDecimal tax;
-    private BigDecimal price;
+    private BigDecimal cost;
+
     private BigDecimal total;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private BigDecimal tax;
+
     private LocalDate invoiceDate;
 
     private boolean enabled;
 
     private CompanyDTO company;
 
-    private ClientVendor clientVendor;
     private List<InvoiceProductDTO> invoiceProductList;
+
+    private Long invoiceNo;
+
+    private ProductDTO product;
+
+    public String companyName;
+
+    private ClientVendor clientVendor;
+
 }
