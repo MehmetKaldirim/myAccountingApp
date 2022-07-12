@@ -1,14 +1,18 @@
 package com.zeroToHero.accountingapp.controller;
 
-import com.zeroToHero.accountingapp.service.InvoiceProductService;
-import com.zeroToHero.accountingapp.service.ReportService;
-import com.zeroToHero.accountingapp.service.StockDetailsService;
-import com.zeroToHero.accountingapp.service.UserService;
+import com.zeroToHero.accountingapp.service.*;
 import com.zeroToHero.accountingapp.service.impl.ReportServiceImpl;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Controller
@@ -20,10 +24,12 @@ public class ReportController {
 
     private final ReportService reportService;
     private final UserService userService;
+    private final ExportPDFService exportPDFService;
 
-    public ReportController(ReportService reportService, UserService userService) {
+    public ReportController(ReportService reportService, UserService userService, ExportPDFService exportPDFService) {
         this.reportService = reportService;
         this.userService = userService;
+        this.exportPDFService = exportPDFService;
     }
 
     @GetMapping("/stock")
@@ -50,4 +56,18 @@ public class ReportController {
         return "/report/export-pdf-button";
     }
 
+
+    @GetMapping("/downloadPDF")
+    public void downloadReceipt(HttpServletResponse response) throws IOException {
+        Map<String, Object> data = new HashMap<>();
+        data.put("profitLoss", reportService.profitLoss());
+        data.put("productsList", reportService.calculateByProducts());
+        data.put("company", userService.findCompanyByUserName());
+
+
+        ByteArrayInputStream exportedData = exportPDFService.exportReceiptPdf("report", data);
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=report.pdf");
+        IOUtils.copy(exportedData, response.getOutputStream());
+    }
 }

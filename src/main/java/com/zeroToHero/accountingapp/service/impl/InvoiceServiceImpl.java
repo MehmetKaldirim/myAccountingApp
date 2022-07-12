@@ -93,7 +93,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoiceDTO invoiceDTO = mapperUtil.convert(invoice,new InvoiceDTO());
 
         List<InvoiceProductDTO> list = invoiceProductService.listAllTempProducts();
-        list.forEach(p->p.setPrice(p.getPrice().multiply(p.getQty())));
+        list.forEach(p->p.setPrice(p.getPrice().multiply(BigDecimal.valueOf(p.getQty()))));
         list.forEach(p->p.setTax(p.getTax().multiply(p.getPrice().divide(BigDecimal.valueOf(100)))));
         list.forEach(obj->obj.setInvoiceDTO(invoiceDTO));
         list.forEach(obj->invoiceProductService.save(obj));

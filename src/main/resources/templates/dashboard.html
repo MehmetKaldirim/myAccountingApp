@@ -150,7 +150,7 @@
                                             <tr th:each="invoice : ${last3Invoices}" >
                                                 <td th:text="${invoice.getInvoiceNumber()}" ></td>
                                                 <td th:text="${invoice.getInvoiceDate()}"></td>
-                                                <td th:text="${invoice.getPrice()+ invoice.getTax()}"></td>
+                                                <td th:text="${invoice.getCost()+ invoice.getTax()}"></td>
                                                 <td th:text="${invoice.getInvoiceType()}">
                                                     <span
                                                             class="badge badge-pill bg-light-primary cursor-pointer"

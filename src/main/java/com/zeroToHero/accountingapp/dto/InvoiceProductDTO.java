@@ -7,15 +7,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class InvoiceProductDTO {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
@@ -24,7 +27,7 @@ public class InvoiceProductDTO {
 
     @NotBlank
     @Size(min = 0)
-    private BigDecimal qty;
+    private Integer qty;
 
     @NotBlank
     @Size(min = 0)
@@ -37,10 +40,20 @@ public class InvoiceProductDTO {
 
     @NotBlank
     @Size(min = 0)
+    private BigDecimal total;
+
+    @NotBlank
+    @Size(min = 0)
     private BigDecimal profit;
 
-    ProductDTO productDTO;
-    InvoiceDTO invoiceDTO;
+    private Long productId;
 
+    private ProductDTO productDTO;
+
+    private InvoiceDTO invoiceDTO;
+
+    private boolean enabled;
+
+    private ClientVendorDTO clientVendorDTO;
 
 }
