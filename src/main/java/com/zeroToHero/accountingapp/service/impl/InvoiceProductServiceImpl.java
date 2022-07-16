@@ -78,6 +78,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 .collect(Collectors.toList());
 
         for (InvoiceProductDTO each : invoiceProductDTOList) {
+            each.setTax(findTaxByInvoice(id));
             each.setTotal((BigDecimal.valueOf(each.getQty()).multiply(each.getPrice()).multiply(each.getTax().add(BigDecimal.valueOf(100)))).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.CEILING));
         }
         return invoiceProductDTOList;
@@ -125,6 +126,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
             invoiceProductRepository.save(each);
         }
     }
+
+    @Override
+    public BigDecimal findTaxByInvoice(Long id) {
+        BigDecimal tax = invoiceRepository.findById(id).get().getClientVendor().getStateId().getState_tax();
+        return tax;
+    }
+
 
 }
 

@@ -11,8 +11,10 @@ import com.zeroToHero.accountingapp.enums.InvoiceType;
 import com.zeroToHero.accountingapp.exception.RecordNotFoundException;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.*;
+import com.zeroToHero.accountingapp.service.CompanyService;
 import com.zeroToHero.accountingapp.service.InvoiceProductService;
 import com.zeroToHero.accountingapp.service.InvoiceService;
+import com.zeroToHero.accountingapp.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -37,7 +39,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final StockDetailsRepository stockDetailsRepository;
     private final ClientVendorRepository clientVendorRepository;
 
-    public InvoiceServiceImpl(MapperUtil mapperUtil, InvoiceRepository invoiceRepository, InvoiceProductRepository invoiceProductRepository, CompanyRepository companyRepository, ProductRepository productRepository, StockDetailsRepository stockDetailsRepository, ClientVendorRepository clientVendorRepository) {
+    private final InvoiceProductService invoiceProductService;
+
+    private final CompanyService companyService;
+
+    private final UserService userService;
+
+    public InvoiceServiceImpl(MapperUtil mapperUtil, InvoiceRepository invoiceRepository, InvoiceProductRepository invoiceProductRepository, CompanyRepository companyRepository, ProductRepository productRepository, StockDetailsRepository stockDetailsRepository, ClientVendorRepository clientVendorRepository, InvoiceProductService invoiceProductService, CompanyService companyService, UserService userService) {
         this.mapperUtil = mapperUtil;
         this.invoiceRepository = invoiceRepository;
         this.invoiceProductRepository = invoiceProductRepository;
@@ -45,6 +53,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.productRepository = productRepository;
         this.stockDetailsRepository = stockDetailsRepository;
         this.clientVendorRepository = clientVendorRepository;
+        this.invoiceProductService = invoiceProductService;
+        this.companyService = companyService;
+        this.userService = userService;
     }
 
     @Override
@@ -127,12 +138,17 @@ public class InvoiceServiceImpl implements InvoiceService {
             for (InvoiceDTO eachInvoiceDTO : listInvoiceDTO) {
                 BigDecimal totalTax = BigDecimal.valueOf(0);
                 for (InvoiceProductDTO each : eachInvoiceDTO.getInvoiceProductList()) {
+                    each.setTax(eachInvoiceDTO.getClientVendor().getStateId().getState_tax());
                     totalTax = totalTax.add(each.getPrice().multiply(BigDecimal.valueOf(each.getQty())).multiply(each.getTax()).divide(BigDecimal.valueOf(100)));
                 }
                 eachInvoiceDTO.setTax(totalTax.setScale(2, RoundingMode.CEILING));
             }
         } else {   //todo Vitaly Bahrom - set tax
-            listInvoiceDTO.forEach(p -> p.setTax((p.getCost().multiply(BigDecimal.valueOf(0.07))).setScale(2, RoundingMode.CEILING)));
+            BigDecimal tax = companyService.findTaxByCompany().divide(BigDecimal.valueOf(100));
+
+            System.out.println(tax);
+
+            listInvoiceDTO.forEach(p -> p.setTax((p.getCost().multiply(tax)).setScale(2, RoundingMode.CEILING)));
         }
 
         //set total
@@ -232,6 +248,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         for (InvoiceProduct eachInvoiceProduct : invoiceProductList) {
             StockDetails stockDetails = new StockDetails();
             stockDetails.setProduct(eachInvoiceProduct.getProduct());
+            eachInvoiceProduct.setTax(invoiceProductService.findTaxByInvoice(id)); //new
             stockDetails.setPrice(eachInvoiceProduct.getTax().add(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(100)).multiply(eachInvoiceProduct.getPrice()));
             stockDetails.setQuantity(BigInteger.valueOf(eachInvoiceProduct.getQty()));
             stockDetails.setRemainingQuantity(BigInteger.valueOf(eachInvoiceProduct.getQty()));

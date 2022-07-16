@@ -4,6 +4,7 @@ package com.zeroToHero.accountingapp.service;
 import com.zeroToHero.accountingapp.dto.CompanyDTO;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface CompanyService {
@@ -19,4 +20,5 @@ public interface CompanyService {
     void reopen(Long id);
     void close(Long id);
 
+    BigDecimal findTaxByCompany();
 }

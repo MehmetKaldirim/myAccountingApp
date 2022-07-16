@@ -4,13 +4,16 @@ import com.zeroToHero.accountingapp.dto.ClientVendorDTO;
 import com.zeroToHero.accountingapp.dto.CompanyDTO;
 import com.zeroToHero.accountingapp.entity.ClientVendor;
 import com.zeroToHero.accountingapp.entity.Company;
+import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.enums.CompanyStatus;
 import com.zeroToHero.accountingapp.enums.CompanyType;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.CompanyRepository;
+import com.zeroToHero.accountingapp.repository.UserRepository;
 import com.zeroToHero.accountingapp.service.CompanyService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +22,12 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final MapperUtil mapperUtil;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil) {
+    private final UserRepository userRepository;
+
+    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, UserRepository userRepository) {
         this.companyRepository = companyRepository;
         this.mapperUtil = mapperUtil;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -76,6 +82,13 @@ public class CompanyServiceImpl implements CompanyService {
         company.setCompanyStatus(CompanyStatus.DISABLED);
         companyRepository.save(company);
 
+    }
+
+    @Override
+    public BigDecimal findTaxByCompany() {
+        User loggedInUser = userRepository.findByEmail("manager1@company2.com");
+        BigDecimal tax = loggedInUser.getCompany().getState().getState_tax();
+        return tax;
     }
 
 
