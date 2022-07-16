@@ -79,4 +79,11 @@ public class UserServiceImpl implements UserService {
         return user.getCompany();
     }
 
+    @Override
+    public Company findCompanyByLoggedInUser() {
+        User user = userRepository.findByEmail("admin@company2.com");
+        Company company = user.getCompany();
+        return company;
+    }
+
 }

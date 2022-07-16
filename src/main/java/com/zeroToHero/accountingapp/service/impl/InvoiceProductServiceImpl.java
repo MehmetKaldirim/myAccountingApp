@@ -13,6 +13,8 @@ import com.zeroToHero.accountingapp.enums.InvoiceType;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.*;
 import com.zeroToHero.accountingapp.service.InvoiceProductService;
+import com.zeroToHero.accountingapp.service.InvoiceService;
+import com.zeroToHero.accountingapp.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,13 +32,15 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     final private MapperUtil mapperUtil;
     final private InvoiceRepository invoiceRepository;
 
+    final private UserService userService;
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, CompanyRepository companyRepository, ProductRepository productRepository, MapperUtil mapperUtil, InvoiceRepository invoiceRepository) {
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, CompanyRepository companyRepository, ProductRepository productRepository, MapperUtil mapperUtil, InvoiceRepository invoiceRepository, UserService userService) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.companyRepository = companyRepository;
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
         this.invoiceRepository = invoiceRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -71,7 +75,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public List<InvoiceProductDTO>  findAllInvoiceProductsByInvoiceId(Long id) {
-        List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductRepository.findAllByInvoiceId(id)
+        List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductRepository.findAllByInvoiceIdAndInvoice_Company(id,userService.findCompanyByLoggedInUser())
                 .stream()
                 .filter(p -> !p.getIsDeleted())
                 .map(p -> mapperUtil.convert(p, new InvoiceProductDTO()))
@@ -101,7 +105,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     @Override
     public List<InvoiceProductDTO> getByInvoiceId(Long invoiceId) {
 
-        List<InvoiceProductDTO> invoiceProductDTO = invoiceProductRepository.findAllByInvoiceId(invoiceId)
+        List<InvoiceProductDTO> invoiceProductDTO = invoiceProductRepository.findAllByInvoiceIdAndInvoice_Company(invoiceId,userService.findCompanyByLoggedInUser())
                 .stream()
 //                .filter(Invoice::isEnabled)
                 .map(p -> mapperUtil.convert(p, new InvoiceProductDTO())).collect(Collectors.toList());
@@ -120,7 +124,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public void disableInvoiceProductsByInvoiceId(Long id) {
-        List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceId(id);
+        List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceIdAndInvoice_Company(id,userService.findCompanyByLoggedInUser());
         for (InvoiceProduct each : invoiceProductList) {
             each.setEnabled(false);
             invoiceProductRepository.save(each);

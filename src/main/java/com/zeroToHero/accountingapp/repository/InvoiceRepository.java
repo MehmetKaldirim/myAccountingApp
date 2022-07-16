@@ -1,17 +1,19 @@
 package com.zeroToHero.accountingapp.repository;
 
 
+import com.zeroToHero.accountingapp.entity.Company;
 import com.zeroToHero.accountingapp.entity.Invoice;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Arrays;
 import java.util.List;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
-    List<Invoice> findAllByInvoiceType(InvoiceType invoiceType);
+    //List<Invoice> findAllByInvoiceType(InvoiceType invoiceType);
 
     @Query("SELECT MAX(id) FROM Invoice")
     long selectMaxInvoiceId();
@@ -26,4 +28,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     @Query(value = "SELECT * FROM invoice i INNER JOIN company c ON c.id = i.company_id WHERE c.title = ?1 ORDER BY i.invoice_date DESC LIMIT 3 ", nativeQuery = true)
     List<Invoice> findLast3InvoiceByDate(@Param("companyTitle") String companyTitle);
+
+    List<Invoice> findAllByInvoiceTypeAndCompany(InvoiceType invoiceType, Company companyByLoggedInUser);
 }

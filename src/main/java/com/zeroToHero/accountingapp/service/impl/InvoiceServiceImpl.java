@@ -117,12 +117,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceDTO> listAllByInvoiceType(InvoiceType invoiceType) {
         //map invoiceProduct of each Invoice -> DTO
-        List<InvoiceDTO> listInvoiceDTO = invoiceRepository.findAllByInvoiceType(invoiceType)
+        List<InvoiceDTO> listInvoiceDTO = invoiceRepository.findAllByInvoiceTypeAndCompany(invoiceType,userService.findCompanyByLoggedInUser())
                 .stream().filter(Invoice::isEnabled).map(p -> mapperUtil.convert(p, new InvoiceDTO())).collect(Collectors.toList());
 
         //map all invoice products from invoice to invoiceProduct DTO
         for (InvoiceDTO each : listInvoiceDTO) {
-            List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductRepository.findAllByInvoiceId(each.getId())
+            List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductRepository.findAllByInvoiceIdAndInvoice_Company(each.getId(),userService.findCompanyByLoggedInUser())
                     .stream()
                     .filter(InvoiceProduct::isEnabled)
                     .map(p -> mapperUtil.convert(p, new InvoiceProductDTO()))
@@ -146,8 +146,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         } else {   //todo Vitaly Bahrom - set tax
             BigDecimal tax = companyService.findTaxByCompany().divide(BigDecimal.valueOf(100));
 
-            System.out.println(tax);
-
             listInvoiceDTO.forEach(p -> p.setTax((p.getCost().multiply(tax)).setScale(2, RoundingMode.CEILING)));
         }
 
@@ -159,7 +157,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public BigDecimal calculateCostByInvoiceID(Long id) {
-        List<InvoiceProductDTO> invoiceProductListById = invoiceProductRepository.findAllByInvoiceId(id)
+        List<InvoiceProductDTO> invoiceProductListById = invoiceProductRepository.findAllByInvoiceIdAndInvoice_Company(id,userService.findCompanyByLoggedInUser())
                 .stream().filter(p -> p.isEnabled())
                 .map(p -> mapperUtil.convert(p, new InvoiceProductDTO())).collect(Collectors.toList());
         BigDecimal cost = BigDecimal.valueOf(0);
@@ -215,7 +213,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void enableInvoice(Long id) {
         Invoice invoice = invoiceRepository.findById(id).get();
         // set status enabled for all product invoices in the list
-        List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceId(id);
+        List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceIdAndInvoice_Company(id,userService.findCompanyByLoggedInUser());
         for (InvoiceProduct eachInvoiceProduct : invoiceProductList) {
             eachInvoiceProduct.setEnabled(true);
         }
@@ -225,7 +223,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void approvePurchaseInvoice(Long id) {
-        List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceId(id);
+        List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceIdAndInvoice_Company(id,userService.findCompanyByLoggedInUser());
         for (InvoiceProduct eachInvoiceProduct : invoiceProductList) {
             //update stock
             Long productId = eachInvoiceProduct.getProduct().getId();
@@ -243,7 +241,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void addProductToStockByInvoice(Long id) {
-        List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceId(id);
+        List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceIdAndInvoice_Company(id,userService.findCompanyByLoggedInUser());
 
         for (InvoiceProduct eachInvoiceProduct : invoiceProductList) {
             StockDetails stockDetails = new StockDetails();
