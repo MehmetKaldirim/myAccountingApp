@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface StockDetailsService {
 
-    List<StockDetailsDTO> listAllStocks();
+    StockDetailsDTO findById(Long id);
+
+    List<StockDetailsDTO> getByProductId(Long productId);
+
+    void updateStockDetail(StockDetailsDTO stockDetailsDTO);
 
 }

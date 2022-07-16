@@ -4,12 +4,14 @@ package com.zeroToHero.accountingapp.service.impl;
 
 import com.zeroToHero.accountingapp.dto.InvoiceDTO;
 import com.zeroToHero.accountingapp.dto.InvoiceProductDTO;
+import com.zeroToHero.accountingapp.dto.ProductDTO;
+import com.zeroToHero.accountingapp.entity.Invoice;
 import com.zeroToHero.accountingapp.entity.InvoiceProduct;
+import com.zeroToHero.accountingapp.entity.Product;
 import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
-import com.zeroToHero.accountingapp.repository.InvoiceProductRepository;
-import com.zeroToHero.accountingapp.repository.UserRepository;
+import com.zeroToHero.accountingapp.repository.*;
 import com.zeroToHero.accountingapp.service.InvoiceProductService;
 import org.springframework.stereotype.Service;
 
@@ -20,112 +22,109 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class InvoiceProductServiceImpl implements InvoiceProductService{
-    private List<InvoiceProductDTO> tempProductInvoice = new ArrayList<>();
+public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     final private InvoiceProductRepository invoiceProductRepository;
-    final private UserRepository userRepository;
+    final private CompanyRepository companyRepository;
+    final private ProductRepository productRepository;
     final private MapperUtil mapperUtil;
+    final private InvoiceRepository invoiceRepository;
 
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, UserRepository userRepository, MapperUtil mapperUtil) {
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, CompanyRepository companyRepository, ProductRepository productRepository, MapperUtil mapperUtil, InvoiceRepository invoiceRepository) {
         this.invoiceProductRepository = invoiceProductRepository;
-        this.userRepository = userRepository;
+        this.companyRepository = companyRepository;
+        this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
+        this.invoiceRepository = invoiceRepository;
     }
 
     @Override
-
     public List<InvoiceProduct> listAll() {
-        User user = userRepository.findByEmail("admin@company2.com");
-        List<InvoiceProduct> list = invoiceProductRepository.findAllByInvoice_Company(user.getCompany()).stream()
+        return invoiceProductRepository.findAll();
+    }
+
+    @Override
+    public List<ProductDTO> findAllProductsByCompanyName(String companyName) {
+        List<Product> productList = productRepository.findAllProductsByCompanyName(companyName);
+        List<ProductDTO> productDTOList= productList.stream()
+                .map(p->mapperUtil.convert(p,new ProductDTO()))
+                .collect(Collectors.toList());
+        return productDTOList;
+    }
+
+    @Override
+    public void addInvoiceProductByInvoiceId(Long id, InvoiceProductDTO invoiceProductDTO) {
+
+        Invoice invoice = invoiceRepository.findById(id).get();
+        InvoiceProduct invoiceProduct = mapperUtil.convert(invoiceProductDTO, new InvoiceProduct());
+        invoiceProduct.setInvoice(invoice);
+        //get last id in invoiceProduct Table +1
+        Long lastId = invoiceProductRepository.findHighestId().get()+1;
+        invoiceProduct.setId(lastId);
+
+        if(invoice.getInvoiceType()== InvoiceType.PURCHASE) invoiceProduct.setProfit(BigDecimal.ZERO);
+        Product product = productRepository.getProductByName(invoiceProductDTO.getName()).get();
+        invoiceProduct.setProduct(product);
+        invoiceProductRepository.save (invoiceProduct);
+    }
+
+    @Override
+    public List<InvoiceProductDTO>  findAllInvoiceProductsByInvoiceId(Long id) {
+        List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductRepository.findAllByInvoiceId(id)
+                .stream()
+                .filter(p -> !p.getIsDeleted())
+                .map(p -> mapperUtil.convert(p, new InvoiceProductDTO()))
                 .collect(Collectors.toList());
 
-        return list;
-    }
-
-    @Override
-    public List<InvoiceProductDTO> listAllByInvoiceType(InvoiceType invoiceType) {
-        User loggedInUser = userRepository.findByEmail("admin@company2.com");
-        List<InvoiceProduct> list = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(invoiceType,loggedInUser.getCompany());
-
-
-
-        //list.forEach(p -> p.setPrice((p.getPrice().multiply(BigDecimal.valueOf(1.20)).setScale(2, RoundingMode.CEILING))));
-        //list.forEach(p -> p.setPrice((p.getPrice().multiply(p.getQty()).setScale(2, RoundingMode.CEILING))));
-        //list.forEach(p -> p.setTax((p.getPrice().multiply(BigDecimal.valueOf(0.10))).setScale(2, RoundingMode.CEILING)));
-
-        List<InvoiceProductDTO> listDTO = list.stream().map(p -> mapperUtil.convert(p, new InvoiceProductDTO())).collect(Collectors.toList());
-
-        return listDTO;
-    }
-
-
-
-
-
-
-    @Override
-    public void delete(Long id) {
-
-    }
-
-    @Override
-    public void save(InvoiceProductDTO dto) {
-        invoiceProductRepository.save(mapperUtil.convert(dto,new InvoiceProduct()));
-    }
-
-    @Override
-    public List<InvoiceProductDTO> saveTemp(InvoiceProductDTO invoice) {
-
-        tempProductInvoice.add(invoice);
-
-        return tempProductInvoice;
-    }
-
-
-
-
-
-
-
-
-    @Override
-    public void deleteTemp(Long id) {
-        System.out.println("Here we are in service imp delete product and id is " + id);
-
-        for(InvoiceProductDTO invp : tempProductInvoice){
-            if(invp.getProductDTO().getId()==id){
-                System.out.println("yes they are same let delet it");
-                tempProductInvoice.remove(invp);
-                break;
-            }
-
+        for (InvoiceProductDTO each : invoiceProductDTOList) {
+            each.setTotal((BigDecimal.valueOf(each.getQty()).multiply(each.getPrice()).multiply(each.getTax().add(BigDecimal.valueOf(100)))).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.CEILING));
         }
-    }
-    @Override
-    public List<InvoiceProductDTO> listAllTempProducts() {
-        return tempProductInvoice;
+        return invoiceProductDTOList;
     }
 
     @Override
-    public void clearTempList() {
-        tempProductInvoice.clear();
+    public Long findInvoiceIdByInvoiceProductId(Long id) {
+        return invoiceProductRepository.findInvoiceByInvoiceProductId(id);
     }
 
     @Override
-    public InvoiceProductDTO findTempInvoiceProductById(Long id) {
-        System.out.println("do we have id here" + id);
-        for(InvoiceProductDTO invp : tempProductInvoice){
-            if(invp.getProductDTO().getId().equals(id)){
-                System.out.println("yes we are in find temp product now");
-                tempProductInvoice.remove(invp);
-                return invp;
-            }
+    public void deleteInvoiceProductById(Long ipid) {
+        InvoiceProduct invoiceProduct =  invoiceProductRepository.findById(ipid).get();
+        invoiceProduct.setIsDeleted(true);
+        invoiceProductRepository.save(invoiceProduct);
 
-        }
+    }
+
+
+    @Override
+    public List<InvoiceProductDTO> getByInvoiceId(Long invoiceId) {
+
+        List<InvoiceProductDTO> invoiceProductDTO = invoiceProductRepository.findAllByInvoiceId(invoiceId)
+                .stream()
+//                .filter(Invoice::isEnabled)
+                .map(p -> mapperUtil.convert(p, new InvoiceProductDTO())).collect(Collectors.toList());
+        return invoiceProductDTO;
+    }
+
+    @Override
+    public List<InvoiceProductDTO> listAllAddedItems() {
         return null;
     }
 
+    @Override
+    public List<InvoiceProductDTO> findAllByInvoiceId(Long id) {
+        return null;
+    }
+
+    @Override
+    public void disableInvoiceProductsByInvoiceId(Long id) {
+        List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceId(id);
+        for (InvoiceProduct each : invoiceProductList) {
+            each.setEnabled(false);
+            invoiceProductRepository.save(each);
+        }
+    }
 
 }
+

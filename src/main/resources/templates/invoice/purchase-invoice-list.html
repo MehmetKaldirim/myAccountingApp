@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html class="loading" lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head">
-    <title>Purchase Invoice List</title>
+<head>
+    <head th:replace="fragments :: page_head"></head>
+    <title>List Purchase</title>
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/ico/favicon.ico}">
 </head>
 
 <body class="horizontal-layout horizontal-menu horizontal-menu-padding 2-columns  navbar-sticky"
       data-open="hover" data-menu="horizontal-menu" data-col="2-columns">
-<div th:replace="fragments :: page_header"></div>
-<div class="wrapper">
+    <div th:replace="fragments :: page_header"></div>
+    <div class="wrapper">
     <div th:replace="fragments :: page_menu"></div>
     <div class="main-panel">
         <div class="main-content">
@@ -16,31 +17,13 @@
             <div class="content-wrapper">
                 <section class="users-list-wrapper">
                     <!-- ADD PURCHASE INVOICE LINK BEGIN -->
-                    <div class="users-list-filter d-flex justify-content-begin">
-                        <form action="#" th:object="${clientVendor}" method="get" th:action="@{/purchase/create}">
-                            <div class="form-row justify-content-begin" >
-
-                                <div class="col-12 col-md-3">
-                                    <div class="form-group">
-                                        <label for="create" class="form-group">CREATE</label>
-                                        <button type="submit" name="action" value="createInvoice" id="create"
-                                                class="btn btn-success" >CREATE</button>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="clientvendor" class="form-group">SELECT VENDOR</label>
-                                        <select th:field="*{id}" class="custom-select" required="required" id="clientvendor">
-
-                                            <option th:value=" ''" th:text="Select"></option>
-                                            <option th:each="vendor : ${vendors}" th:value="${vendor.id}"
-                                                    th:text="${vendor.CompanyName}"></option>
-                                        </select>
-
-                                    </div>
-                                </div>
+                    <div class="users-list-filter px-2">
+                        <form>
+                            <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-right">
+                                <a class="btn btn-success bg-light-success mb-1" th:href="@{/invoice/purchaseInvoiceCreate}">
+                                    <i class="fa fa-plus mr-1"></i>Create Purchase Invoice
+                                </a>
                             </div>
-
                         </form>
                     </div>
                     <!-- ADD PURCHASE INVOICE LINK END -->
@@ -61,33 +44,45 @@
                                                         <th>Cost</th>
                                                         <th>Tax</th>
                                                         <th>Total</th>
-                                                        <th>Edit</th>
-                                                        <th>Status</th>
+                                                        <th>Menu</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr th:each="purchase:${purchaseInvoices}">
-                                                        <td th:text="${purchase.invoiceNumber}"  class="text-truncate" ></td>
-                                                        <td th:text="${purchase.invoiceDate}" class="text-truncate" ></td>
-                                                        <td th:text="${purchase.clientVendor.companyName}" ></td>
-                                                        <td th:text="${purchase.price}"  ></td>
-                                                        <td th:text="${purchase.tax}"  ></td>
-                                                        <td th:text="${purchase.price + purchase.tax}"></td>
-                                                        <td>
-                                                            <a class="ft-list" th:href="@{/purchase/update/{id}(id=${invoice.id})}">
-                                                            </a>
-                                                        </td>
-                                                        <td>
-                                                            <form action="#"
-                                                                  method="post">
-                                                                <a  th:href="@{/purchase/delete/{id}(id=${invoice.id})}"
-                                                                    class="btn btn-danger mb-2 mb-sm-0 mr-sm-2"
-                                                                    type="submit" name="action" value="delete">Delete
-                                                                </a>
+                                                          <tr th:each="purchaseInvoice:${purchaseInvoices}">
+                                                            <td th:text="${purchaseInvoice.invoiceNumber}"  class="text-truncate" ></td>
+                                                            <td th:text="${purchaseInvoice.invoiceDate}" class="text-truncate" ></td>
+                                                            <td th:text="${purchaseInvoice.clientVendor.companyName}" ></td>
+                                                            <td th:text="'$ ' + ${purchaseInvoice.cost}" ></td>
+                                                            <td th:text="'$ ' + ${purchaseInvoice.tax}"  ></td>
+                                                            <td th:text="'$ ' + ${purchaseInvoice.total}"></td>
+                                                              <td>
+                                                                  <a th:if="${purchaseInvoice.invoiceStatus.value !='Approved'}"
+                                                                     th:href="@{/invoice/editPurchaseInvoiceSelectProduct/{id}(id=${purchaseInvoice.id})}"  class="ft-list" >
+                                                                  </a>
+                                                              </td>
+                                                              <td>
+                                                                  <form action="#" data-th-action="@{/invoice/approvePurchaseInvoice/{id}(id=${purchaseInvoice.id})}" method="post" >
+                                                                      <button th:if="${purchaseInvoice.invoiceStatus.value !='Approved'}"
+                                                                              class="btn btn-success mb-2 mb-sm-1 mr-sm-2"
+                                                                              type="submit" name="action" value="approve" >Approve
+                                                                      </button>
+                                                                  </form>
+                                                                  <form action="#" data-th-action="@{/invoice/deletePurchaseInvoice/{id}(id=${purchaseInvoice.invoiceNumber})}" method="post">
+                                                                      <button th:if="${purchaseInvoice.invoiceStatus.value !='Approved'}"
+                                                                              class="btn btn-danger mb-2 mb-sm-1 mr-sm-2"
+                                                                              type="submit" name="action" value="delete">Delete
+                                                                      </button>
+                                                                  </form>
+                                                                  <form action="#" data-th-action="@{/invoice/toInvoice/{id}(id=${purchaseInvoice.id})}" method="post" >
+                                                                      <button th:if="${purchaseInvoice.invoiceStatus.value =='Approved'}"
+                                                                              class="btn btn-info mb-2 mb-sm-1 mr-sm-2"
+                                                                              type="submit" name="action" value="toInvoice">To Invoice
+                                                                      </button>
+                                                                  </form>
 
-                                                            </form>
-                                                        </td>
-                                                    </tr>
+                                                              </td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -103,6 +98,7 @@
         </div>
     </div>
 </div>
+
 <footer th:replace="fragments :: page_footer"></footer>
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
