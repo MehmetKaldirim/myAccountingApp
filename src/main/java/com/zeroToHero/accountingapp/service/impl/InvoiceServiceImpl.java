@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
 
+
     private final MapperUtil mapperUtil;
     private final InvoiceRepository invoiceRepository;
     private final InvoiceProductRepository invoiceProductRepository;
@@ -127,7 +128,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             for (InvoiceDTO eachInvoiceDTO : listInvoiceDTO) {
                 BigDecimal totalTax = BigDecimal.valueOf(0);
                 for (InvoiceProductDTO each : eachInvoiceDTO.getInvoiceProductList()) {
-                    totalTax = totalTax.add(each.getPrice().multiply(BigDecimal.valueOf(each.getQty())).multiply(each.getTax()).divide(BigDecimal.valueOf(100)));
+                    totalTax = totalTax.add(each.getPrice().multiply(each.getQty()).multiply(each.getTax()).divide(BigDecimal.valueOf(100)));
                 }
                 eachInvoiceDTO.setTax(totalTax.setScale(2, RoundingMode.CEILING));
             }
@@ -148,7 +149,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .map(p -> mapperUtil.convert(p, new InvoiceProductDTO())).collect(Collectors.toList());
         BigDecimal cost = BigDecimal.valueOf(0);
         for (InvoiceProductDTO each : invoiceProductListById) {
-            BigDecimal currItemCost = each.getPrice().multiply(BigDecimal.valueOf(each.getQty()));
+            BigDecimal currItemCost = each.getPrice().multiply(each.getQty());
             cost = cost.add(currItemCost);
         }
         return cost;
@@ -213,9 +214,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         for (InvoiceProduct eachInvoiceProduct : invoiceProductList) {
             //update stock
             Long productId = eachInvoiceProduct.getProduct().getId();
-            Integer additionalQty = eachInvoiceProduct.getQty();
+            BigDecimal additionalQty = eachInvoiceProduct.getQty();
             Product product = productRepository.findProductById(productId).get();
-            product.setQty(product.getQty().add(BigInteger.valueOf(additionalQty)));
+            product.setQty(product.getQty().add(additionalQty));
             productRepository.save(product);
         }
         //change status of invoice -> approved
@@ -233,12 +234,31 @@ public class InvoiceServiceImpl implements InvoiceService {
             StockDetails stockDetails = new StockDetails();
             stockDetails.setProduct(eachInvoiceProduct.getProduct());
             stockDetails.setPrice(eachInvoiceProduct.getTax().add(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(100)).multiply(eachInvoiceProduct.getPrice()));
-            stockDetails.setQuantity(BigInteger.valueOf(eachInvoiceProduct.getQty()));
-            stockDetails.setRemainingQuantity(BigInteger.valueOf(eachInvoiceProduct.getQty()));
+            stockDetails.setQuantity(eachInvoiceProduct.getQty());
+            stockDetails.setRemainingQuantity(eachInvoiceProduct.getQty());
             stockDetails.setIDate(LocalDateTime.now());
             stockDetailsRepository.save(stockDetails);
 
 
         }
     }
+
+    @Override
+    public BigDecimal calculateTaxForProduct(InvoiceProduct invoiceProduct) {
+
+        BigDecimal taxPercentage = invoiceProduct.getInvoice().getClientVendor().getStateId().getState_tax();
+
+        BigDecimal tax = calculatePriceForProduct(invoiceProduct).multiply(taxPercentage).divide(BigDecimal.valueOf(100));
+
+        return tax;
+    }
+
+    @Override
+    public BigDecimal calculatePriceForProduct(InvoiceProduct invoiceProduct) {
+        BigDecimal price = invoiceProduct.getPrice().multiply(invoiceProduct.getQty());
+
+        return null;
+    }
+
+
 }

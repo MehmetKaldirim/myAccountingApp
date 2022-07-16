@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @Entity
@@ -19,6 +20,7 @@ import java.math.BigInteger;
 public class Product extends BaseEntity {
 
     private String name;
+
     private String description;
 
 
@@ -28,13 +30,13 @@ public class Product extends BaseEntity {
    private Category category;
 
 
-    private BigInteger qty;
+    private BigDecimal qty;
 
     @Enumerated(EnumType.STRING)
     private Unit unit;
 
-    private BigInteger lowLimitAlert;
-    private BigInteger tax;
+    private BigDecimal lowLimitAlert;
+    private BigDecimal tax;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
@@ -46,6 +48,6 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
-    private BigInteger newColumn;
+    private BigDecimal newColumn;
 
 }

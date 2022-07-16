@@ -81,13 +81,15 @@ public class PurchaseInvoiceController {
 
     @GetMapping("/purchaseInvoiceSelectProduct/{id}")
     public String getProductDetailsForInvoiceProduct(@PathVariable("id") Long id, Model model) {
+        System.out.println("id 84 " + id);
         InvoiceDTO invoiceDTO = invoiceService.getInvoiceDTOById(id);
         model.addAttribute("id", id);
         model.addAttribute("invoiceDTO", invoiceDTO);
         model.addAttribute("companyName", invoiceDTO.getClientVendor().getCompanyName());
         model.addAttribute("date", invoiceService.getLocalDate());
         model.addAttribute("invoiceId", invoiceService.getNextInvoiceIdPurchase());
-        model.addAttribute("invoiceProductDTO", new InvoiceProductDTO());
+        model.addAttribute("tax", invoiceProductService.getTaxByInvoiceId(id));
+        model.addAttribute("invoiceProductDTO",new InvoiceProductDTO());
         model.addAttribute("products", invoiceProductService.findAllProductsByCompanyName(invoiceDTO.getClientVendor().getCompanyName()));
         model.addAttribute("invoiceProducts", invoiceProductService.findAllInvoiceProductsByInvoiceId(id));
         return "invoice/purchase-invoice-select-product";
@@ -95,12 +97,19 @@ public class PurchaseInvoiceController {
 
     @PostMapping("/purchaseInvoiceSelectProduct/{id}")
     public String postProductDetailsForInvoiceProduct(@PathVariable("id") Long id, @ModelAttribute("invoiceProductDTO") InvoiceProductDTO invoiceProductDTO) {
+        System.out.println("id 102 " + id);
+        System.out.println("what is this " + invoiceProductDTO );
+        invoiceProductDTO.setTax(invoiceProductService.getTaxByInvoiceId(id));
+        invoiceProductDTO.setInvoiceDTO(invoiceService.getInvoiceDTOById(id));
         invoiceProductService.addInvoiceProductByInvoiceId(id, invoiceProductDTO);
+        System.out.println("it s qty for purchase" + invoiceProductDTO.getQty());
+
         return "redirect:/invoice/purchaseInvoiceSelectProduct/" + id;
     }
 
     @PostMapping("/removeItemFromInvoice/{ipid}")
     public String deleteInvoiceProductFromInvoice(@PathVariable("ipid") Long ipid) {
+        System.out.println("113 ipid " + ipid);
         Long id = invoiceProductService.findInvoiceIdByInvoiceProductId(ipid);
         invoiceProductService.deleteInvoiceProductById(ipid);
         return "redirect:/invoice/purchaseInvoiceSelectProduct/" + id;

@@ -17,8 +17,8 @@ public class StockDetailsDTO {
 
     private Long id;
     private LocalDateTime iDate;
-    private BigInteger quantity;
+    private BigDecimal quantity;
     private BigDecimal price;
-    private BigInteger remainingQuantity;
-    private BigInteger productId;
+    private BigDecimal remainingQuantity;
+    private BigDecimal productId;
 }
