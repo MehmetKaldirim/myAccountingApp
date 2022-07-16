@@ -87,10 +87,11 @@ public class PurchaseInvoiceController {
         model.addAttribute("companyName", invoiceDTO.getClientVendor().getCompanyName());
         model.addAttribute("date", invoiceService.getLocalDate());
         model.addAttribute("invoiceId", invoiceService.getNextInvoiceIdPurchase());
+        model.addAttribute("tax", invoiceDTO.getClientVendor().getStateId().getState_tax());
         model.addAttribute("invoiceProductDTO", new InvoiceProductDTO());
         model.addAttribute("products", invoiceProductService.findAllProductsByCompanyName(invoiceDTO.getClientVendor().getCompanyName()));
         model.addAttribute("invoiceProducts", invoiceProductService.findAllInvoiceProductsByInvoiceId(id));
-        return "invoice/purchase-invoice-select-product";
+        return "/invoice/purchase-invoice-select-product";
     }
 
     @PostMapping("/purchaseInvoiceSelectProduct/{id}")

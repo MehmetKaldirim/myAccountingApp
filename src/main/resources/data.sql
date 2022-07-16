@@ -33,21 +33,21 @@ VALUES (2, '2022-05-11 00:00:00', FALSE, 2, '2022-05-11 00:00:00', 'Electronics'
        (3, '2022-05-11 00:00:00', FALSE, 3, '2022-05-11 00:00:00', 'Sports', TRUE, 3);
 
 INSERT INTO invoice (created_by, created_time, is_deleted, updated_by, updated_time, enabled, invoice_date, invoice_number, invoice_status, invoice_type, sptable_id, company_id)
-VALUES (5, '2022-05-16 00:00:00', FALSE, 5, '2022-05-16 00:00:00', TRUE, '05/16/2022', 'P-INV1', 'APPROVED', 'PURCHASE', 1, 2),
-       (5, '2022-05-20 00:00:00', FALSE, 5, '2022-05-20 00:00:00', TRUE, '05/20/2022', 'P-INV2', 'APPROVED', 'PURCHASE', 1, 2),
-       (5, '2022-06-10 00:00:00', FALSE, 5, '2022-06-10 00:00:00', TRUE, '06/10/2022', 'S-INV3', 'APPROVED', 'SALE', 2, 2),
-       (5, '2022-06-10 00:00:00', FALSE, 5, '2022-06-10 00:00:00', TRUE, '06/10/2022', 'S-INV4', 'APPROVED', 'SALE', 3, 2),
-       (5, '2022-06-11 00:00:00', FALSE, 5, '2022-06-11 00:00:00', TRUE, '06/10/2022', 'S-INV5', 'APPROVED', 'SALE', 4, 2),
-       (7, '2022-05-12 00:00:00', FALSE, 7, '2022-05-12 00:00:00', TRUE, '05/12/2022', 'P-INV6', 'APPROVED', 'PURCHASE', 1, 3),
-       (7, '2022-05-15 00:00:00', FALSE, 7, '2022-05-10 00:00:00', TRUE, '05/15/2022', 'P-INV7', 'APPROVED', 'PURCHASE', 1, 3),
-       (7, '2022-06-11 00:00:00', FALSE, 7, '2022-06-11 00:00:00', TRUE, '06/11/2022', 'S-INV8', 'APPROVED', 'SALE', 2, 3),
-       (7, '2022-06-12 00:00:00', FALSE, 7, '2022-06-12 00:00:00', TRUE, '06/12/2022', 'S-INV9', 'APPROVED', 'SALE', 2, 3),
-       (7, '2022-06-13 00:00:00', FALSE, 7, '2022-06-13 00:00:00', TRUE, '06/13/2022', 'S-INV10', 'APPROVED', 'SALE', 2, 3),
-       (9, '2022-05-12 00:00:00', FALSE, 9, '2022-05-12 00:00:00', TRUE, '05/12/2022', 'P-INV11', 'APPROVED', 'PURCHASE', 1, 4),
-       (9, '2022-05-13 00:00:00', FALSE, 9, '2022-05-13 00:00:00', TRUE, '05/13/2022', 'P-INV12', 'APPROVED', 'PURCHASE', 1, 4),
-       (9, '2022-06-11 00:00:00', FALSE, 9, '2022-06-11 00:00:00', TRUE, '06/11/2022', 'S-INV13', 'APPROVED', 'SALE', 3, 4),
-       (9, '2022-06-12 00:00:00', FALSE, 9, '2022-06-12 00:00:00', TRUE, '06/12/2022', 'S-INV14', 'APPROVED', 'SALE', 3, 4),
-       (9, '2022-06-13 00:00:00', FALSE, 9, '2022-06-13 00:00:00', TRUE, '06/13/2022', 'S-INV15', 'APPROVED', 'SALE', 3, 4);
+VALUES (5, '2022-05-16 00:00:00', FALSE, 5, '2022-05-16 00:00:00', TRUE, '16/05/2022', 'P-INV1', 'APPROVED', 'PURCHASE', 1, 2),
+       (5, '2022-05-20 00:00:00', FALSE, 5, '2022-05-20 00:00:00', TRUE, '20/05/2022', 'P-INV2', 'APPROVED', 'PURCHASE', 1, 2),
+       (5, '2022-06-10 00:00:00', FALSE, 5, '2022-06-10 00:00:00', TRUE, '10/06/2022', 'S-INV3', 'APPROVED', 'SALE', 2, 2),
+       (5, '2022-06-10 00:00:00', FALSE, 5, '2022-06-10 00:00:00', TRUE, '10/06/2022', 'S-INV4', 'APPROVED', 'SALE', 3, 2),
+       (5, '2022-06-11 00:00:00', FALSE, 5, '2022-06-11 00:00:00', TRUE, '10/06/2022', 'S-INV5', 'APPROVED', 'SALE', 4, 2),
+       (7, '2022-05-12 00:00:00', FALSE, 7, '2022-05-12 00:00:00', TRUE, '12/05/2022', 'P-INV6', 'APPROVED', 'PURCHASE', 1, 3),
+       (7, '2022-05-15 00:00:00', FALSE, 7, '2022-05-10 00:00:00', TRUE, '15/05/2022', 'P-INV7', 'APPROVED', 'PURCHASE', 1, 3),
+       (7, '2022-06-11 00:00:00', FALSE, 7, '2022-06-11 00:00:00', TRUE, '11/06/2022', 'S-INV8', 'APPROVED', 'SALE', 2, 3),
+       (7, '2022-06-12 00:00:00', FALSE, 7, '2022-06-12 00:00:00', TRUE, '12/06/2022', 'S-INV9', 'APPROVED', 'SALE', 2, 3),
+       (7, '2022-06-13 00:00:00', FALSE, 7, '2022-06-13 00:00:00', TRUE, '13/06/2022', 'S-INV10', 'APPROVED', 'SALE', 2, 3),
+       (9, '2022-05-12 00:00:00', FALSE, 9, '2022-05-12 00:00:00', TRUE, '12/05/2022', 'P-INV11', 'APPROVED', 'PURCHASE', 1, 4),
+       (9, '2022-05-13 00:00:00', FALSE, 9, '2022-05-13 00:00:00', TRUE, '13/05/2022', 'P-INV12', 'APPROVED', 'PURCHASE', 1, 4),
+       (9, '2022-06-11 00:00:00', FALSE, 9, '2022-06-11 00:00:00', TRUE, '11/06/2022', 'S-INV13', 'APPROVED', 'SALE', 3, 4),
+       (9, '2022-06-12 00:00:00', FALSE, 9, '2022-06-12 00:00:00', TRUE, '12/06/2022', 'S-INV14', 'APPROVED', 'SALE', 3, 4),
+       (9, '2022-06-13 00:00:00', FALSE, 9, '2022-06-13 00:00:00', TRUE, '13/06/2022', 'S-INV15', 'APPROVED', 'SALE', 3, 4);
 
 -- INSERT INTO product (created_by, created_time, is_deleted, updated_by, updated_time, description, enabled, low_limit_alert, name, new_column, product_status, qty, tax, unit,category_id,company_id)
 -- VALUES (4, '2022-05-15 00:00:00', FALSE, 4, '2022-05-15 00:00:00', 'TV', TRUE, 100, 'TV', 1, 'ACTIVE', 50, 8, 'PCS',1,2),
