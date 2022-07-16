@@ -13,17 +13,31 @@ public interface InvoiceService {
 
     List<InvoiceDTO> listAllByInvoiceType(InvoiceType invoiceType);
 
-
-    BigDecimal calculatePriceByInvoiceID(Long id);
-    BigDecimal calculateTaxByInvoiceID(Long id);
-
     BigDecimal calculateCostByInvoiceID(Long id);
 
-    BigDecimal calculateProfitByInvoiceID(Long id);
+    void delete(Long id);
 
-    InvoiceDTO save(InvoiceDTO invoice);
+    String getNextInvoiceIdSale();
 
-    void deleteTemp(Long id);
+    String getNextInvoiceIdPurchase();
 
-    String createInvoiceNumber(InvoiceType invoiceType);
+    String getLocalDate();
+    Long getInvoiceNo(String id);
+    void approveInvoice(String invoiceId);
+
+    String findInvoiceName(String invoiceId);
+
+    Long saveAndReturnId(InvoiceDTO invoiceDTO);
+
+    InvoiceDTO save(InvoiceDTO invoiceDTO);
+
+    void updateInvoiceCompany(InvoiceDTO invoiceDTO);
+
+    InvoiceDTO getInvoiceDTOById(Long id);
+
+    void enableInvoice(Long id);
+
+    void approvePurchaseInvoice(Long id);
+
+    void addProductToStockByInvoice(Long id);
 }
