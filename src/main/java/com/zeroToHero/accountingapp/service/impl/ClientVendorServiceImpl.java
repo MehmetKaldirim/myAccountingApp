@@ -74,4 +74,10 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     public ClientVendor findVendorById(Long vendorId) {
         return clientVendorRepository.findById(vendorId).get();
     }
+
+    @Override
+    public String findClientNameById(Long id) {
+        return clientVendorRepository.findClientNameById(id);
+    }
+
 }

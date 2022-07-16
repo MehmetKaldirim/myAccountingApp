@@ -233,8 +233,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             StockDetails stockDetails = new StockDetails();
             stockDetails.setProduct(eachInvoiceProduct.getProduct());
             stockDetails.setPrice(eachInvoiceProduct.getTax().add(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(100)).multiply(eachInvoiceProduct.getPrice()));
-            stockDetails.setQuantity(BigDecimal.valueOf(eachInvoiceProduct.getQty()));
-            stockDetails.setRemainingQuantity(BigDecimal.valueOf(eachInvoiceProduct.getQty()));
+            stockDetails.setQuantity(BigInteger.valueOf(eachInvoiceProduct.getQty()));
+            stockDetails.setRemainingQuantity(BigInteger.valueOf(eachInvoiceProduct.getQty()));
             stockDetails.setIDate(LocalDateTime.now());
             stockDetailsRepository.save(stockDetails);
 

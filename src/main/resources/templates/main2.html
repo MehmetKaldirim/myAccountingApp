@@ -70,15 +70,15 @@
                         class="dropdown-toggle nav-link d-flex align-items-center" href="javascript:;"
                         data-toggle="dropdown"><i class="ft-box"></i><span data-i18n="Apps">Management</span></a>
                     <ul class="dropdown-menu">
-                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{company/add}"
+                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{/company/list}"
                                             data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
                                 data-i18n="Email">Company Registration</span></a>
                         </li>
-                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{/user/list}"
+                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{/user/add}"
                                             data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
                                 data-i18n="Chat">User Registration</span></a>
                         </li>
-                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{/client-vendor/list}"
+                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{/client-vendor/add}"
                                              data-toggle="dropdown"><i
                                 class="ft-arrow-right submenu-icon"></i><span data-i18n="Task Board">Vendor/Client Registration</span></a>
                         </li>
@@ -93,7 +93,7 @@
                                             data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
                                 data-i18n="Grid">Products</span></a>
                         </li>
-                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{category/category-list}"
+                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{/category/category-list}"
                                             data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
                                 data-i18n="Typography">Category</span></a>
                         </li>
@@ -105,19 +105,20 @@
                     <ul class="dropdown-menu">
 
                         <li data-menu=""><a class="dropdown-item d-flex align-items-center"
-                                            th:href="@{/purchase/list}" data-toggle="dropdown"><i
+                                            th:href="@{/invoice/purchaseInvoiceList}" data-toggle="dropdown"><i
                                 class="ft-arrow-right submenu-icon"></i><span
                                 data-i18n="Grid">Purchase Invoice</span></a>
                         </li>
                         <li data-menu=""><a class="dropdown-item d-flex align-items-center"
-                                            th:href="@{/sale/list}" data-toggle="dropdown"><i
+                                            th:href="@{/invoice/salesInvoiceList}" data-toggle="dropdown"><i
                                 class="ft-arrow-right submenu-icon"></i><span
                                 data-i18n="Typography">Sales Invoice</span></a>
                         </li>
-                        <li data-menu=""><a class="dropdown-item d-flex align-items-center"
-                                            href="invoice1/purchase-invoice-list.html" data-toggle="dropdown"><i
-                                class="ft-arrow-right submenu-icon"></i><span data-i18n="Grid">Invoice Search</span></a>
-                        </li>
+<!--                        TODO: Vitaly and Bahrom-->
+<!--                        <li data-menu=""><a class="dropdown-item d-flex align-items-center"-->
+<!--                                            href="invoice/purchase-invoice-list.html" data-toggle="dropdown"><i-->
+<!--                                class="ft-arrow-right submenu-icon"></i><span data-i18n="Grid">Invoice Search</span></a>-->
+<!--                        </li>-->
                     </ul>
                 </li>
                 <li class="dropdown nav-item" data-menu="dropdown"><a
@@ -125,16 +126,32 @@
                         data-toggle="dropdown"><i class="ft-briefcase"></i><span data-i18n="Components">Reporting</span></a>
                     <ul class="dropdown-menu">
 
-                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{report/stock}"
+                        <li data-menu=""><a class="dropdown-item d-flex align-items-center" href="report/stock-report.html"
                                             data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
                                 data-i18n="Grid">Stock Report</span></a>
                         </li>
                         <li data-menu=""><a class="dropdown-item d-flex align-items-center"
-                                            th:href="@{report/profit}" data-toggle="dropdown"><i
+                                            href="report/profit-loss-report.html" data-toggle="dropdown"><i
                                 class="ft-arrow-right submenu-icon"></i><span data-i18n="Typography">Profit / Loss Report</span></a>
                         </li>
                     </ul>
                 </li>
+                <li class="dropdown nav-item softer" data-menu="dropdown" style="background: rgba(213,217,139,0.8)" ><a
+                        class="dropdown-toggle nav-link d-flex align-items-center" href="javascript:;"
+                        data-toggle="dropdown"><i class="ft-archive"></i><span data-i18n="Components">Administration</span></a>
+                    <ul class="dropdown-menu">
+
+                        <li data-menu=""><a th:href="@{/payment/list}" class="dropdown-item d-flex align-items-center"
+                                            data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
+                                data-i18n="Grid">MemberShip Payment</span></a>
+                        </li>
+                        <li data-menu=""><a class="dropdown-item d-flex align-items-center"
+                                            data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
+                                data-i18n="Typography">Log Document</span></a>
+                        </li>
+                    </ul>
+                </li>
+                
 
             </ul>
         </div>

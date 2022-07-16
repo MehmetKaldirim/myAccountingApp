@@ -1,6 +1,7 @@
 package com.zeroToHero.accountingapp.service.impl;
 
 import com.zeroToHero.accountingapp.dto.StockDetailsDTO;
+import com.zeroToHero.accountingapp.entity.StockDetails;
 import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.StockDetailsRepository;
@@ -14,23 +15,33 @@ import java.util.stream.Collectors;
 @Service
 public class StockDetailsServiceImpl implements StockDetailsService {
 
-    private final StockDetailsRepository stockDetailsRepository;
     private final MapperUtil mapperUtil;
-    private final UserRepository userRepository;
+    private final StockDetailsRepository stockDetailsRepository;
 
-    public StockDetailsServiceImpl(StockDetailsRepository stockDetailsRepository, MapperUtil mapperUtil, UserRepository userRepository) {
-        this.stockDetailsRepository = stockDetailsRepository;
+    public StockDetailsServiceImpl(MapperUtil mapperUtil, StockDetailsRepository stockDetailsRepository) {
         this.mapperUtil = mapperUtil;
-        this.userRepository = userRepository;
+        this.stockDetailsRepository = stockDetailsRepository;
     }
 
     @Override
-    public List<StockDetailsDTO> listAllStocks() {
-
-        User user = userRepository.findByEmail("admin@company2.com");
-
-        return stockDetailsRepository.findAllByProduct_Company(user.getCompany()).stream().map(stock -> mapperUtil
-                .convert(stock, new StockDetailsDTO())).collect(Collectors.toList());
+    public StockDetailsDTO findById(Long id) {
+        return mapperUtil.convert(stockDetailsRepository.findAllByProductId(id), new StockDetailsDTO());
     }
-}
 
+    @Override
+    public List<StockDetailsDTO> getByProductId(Long productId) {
+        List<StockDetailsDTO> stockDetailsDTOS = stockDetailsRepository.findAllByInvoiceId(productId)
+                .stream()
+                .filter(st -> st.getRemainingQuantity().intValue()!=0)
+                .map(p -> mapperUtil.convert(p, new StockDetailsDTO())).collect(Collectors.toList());
+        return stockDetailsDTOS;
+    }
+
+    @Override
+    public void updateStockDetail(StockDetailsDTO stockDetailsDTO) {
+        StockDetails s = mapperUtil.convert(stockDetailsDTO,new StockDetails());
+        stockDetailsRepository.save(s);
+    }
+
+
+}

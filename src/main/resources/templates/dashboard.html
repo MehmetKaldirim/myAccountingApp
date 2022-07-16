@@ -3,7 +3,10 @@
 <!-- BEGIN : Head-->
 <head>
     <head th:replace="fragments :: page_head"/>
-    <title>Dashboard</title>
+        <a  th:href="@{/return/dashboard}"
+            class="btn btn-danger mb-2 mb-sm-0 mr-sm-2"
+            type="submit" name="action" value="delete">Delete
+        </a>
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/logos/logo-color-big.png}">
     <style>
 
@@ -150,7 +153,7 @@
                                             <tr th:each="invoice : ${last3Invoices}" >
                                                 <td th:text="${invoice.getInvoiceNumber()}" ></td>
                                                 <td th:text="${invoice.getInvoiceDate()}"></td>
-                                                <td th:text="${invoice.getCost()+ invoice.getTax()}"></td>
+                                                <td th:text="${invoice.getTotal()}"></td>
                                                 <td th:text="${invoice.getInvoiceType()}">
                                                     <span
                                                             class="badge badge-pill bg-light-primary cursor-pointer"
@@ -176,40 +179,40 @@
                                         <span class="float-right cursor-pointer">
                                                 <i class="ft-more-vertical-"></i>
                                             </span>
-                                        </h4>
-                                        <p class="grey"><span><img th:src="@{/img/flags/europe.png}"
-                                                                   class="flags flags-europe"></span><b>Frankfurt</b>
-                                            <span> <img th:src="@{img/icons/clock.png}" class="clock"> </span>
-                                            <span id="paris-time"></span>
-                                            <!--                                        <span ></span>-->
-                                        </p>
-                                        <ul class="list-group mb-3">
-                                            <li class="list-group-item">
-                                                <span><img th:src="@{/img/flags/usa.png}" class="flags"></span>
-                                                <span>American Dollar</span>
-                                                <span class="badge bg-light-primary float-right"
-                                                      th:text="${rates.getRates().getUsd()}" ></span>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <span><img th:src="@{/img/flags/unitedkingdom.png}" class="flags"></span>
-                                                <span>British Pound</span>
-                                                <span class="badge bg-light-secondary float-right"
-                                                      th:text="${rates.getRates().getGbp()}" ></span>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <span><img th:src="@{/img/flags/turkiye.png}" class="flags"></span>
-                                                <span>Turkish Lira</span>
-                                                <span class="badge bg-light-warning float-right"
-                                                      th:text="${rates.getRates().getTry()}" ></span>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <span><img th:src="@{/img/flags/japan.png}" class="flags"></span>
-                                                <span>Japan Yen</span>
+                                    </h4>
+                                    <p class="grey"><span><img th:src="@{/img/flags/europe.png}"
+                                                               class="flags flags-europe"></span><b>Frankfurt</b>
+                                        <span> <img th:src="@{img/icons/clock.png}" class="clock"> </span>
+                                        <span id="paris-time"></span>
+                                        <!--                                        <span ></span>-->
+                                    </p>
+                                    <ul class="list-group mb-3">
+                                        <li class="list-group-item">
+                                            <span><img th:src="@{/img/flags/usa.png}" class="flags"></span>
+                                            <span>American Dollar</span>
+                                            <span class="badge bg-light-primary float-right"
+                                                  th:text="${rates.getRates().getUsd()}" ></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span><img th:src="@{/img/flags/unitedkingdom.png}" class="flags"></span>
+                                            <span>British Pound</span>
+                                            <span class="badge bg-light-secondary float-right"
+                                                  th:text="${rates.getRates().getGbp()}" ></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span><img th:src="@{/img/flags/turkiye.png}" class="flags"></span>
+                                            <span>Turkish Lira</span>
+                                            <span class="badge bg-light-warning float-right"
+                                                  th:text="${rates.getRates().getTry()}" ></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span><img th:src="@{/img/flags/japan.png}" class="flags"></span>
+                                            <span>Japan Yen</span>
 
-                                                <span class="badge bg-light-success float-right"
-                                                      th:text="${rates.getRates().getJpy()}" ></span>
-                                            </li>
-                                        </ul>
+                                            <span class="badge bg-light-success float-right"
+                                                  th:text="${rates.getRates().getJpy()}" ></span>
+                                        </li>
+                                    </ul>
                                     <button type="button" class="btn btn-primary mr-2">Profile</button>
                                 </div>
                             </div>
@@ -223,22 +226,22 @@
     </div>
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-    </div>
-    <footer th:replace="fragments :: page_footer"></footer>
-    <div class="sidenav-overlay"></div>
-    <!-- BEGIN PAGE LEVEL JS-->
-    <script th:src="@{/js/dashboard2.js}"></script>
-    <!-- END PAGE LEVEL JS-->
-    <!-- BEGIN: Custom CSS-->
-    <script th:src="@{/assets/js/scripts.js}"></script>
-    <!-- END: Custom CSS-->
-    <script>
-        document.addEventListener("DOMContentLoaded", function(){
-            var d = new Date();
-            var n = d.toLocaleTimeString();
-            document.getElementById("paris-time").textContent=n;
-        });
-    </script>
+</div>
+<footer th:replace="fragments :: page_footer"></footer>
+<div class="sidenav-overlay"></div>
+<!-- BEGIN PAGE LEVEL JS-->
+<script th:src="@{/js/dashboard2.js}"></script>
+<!-- END PAGE LEVEL JS-->
+<!-- BEGIN: Custom CSS-->
+<script th:src="@{/assets/js/scripts.js}"></script>
+<!-- END: Custom CSS-->
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        var d = new Date();
+        var n = d.toLocaleTimeString();
+        document.getElementById("paris-time").textContent=n;
+    });
+</script>
 </body>
 <!-- END : Body-->
 </html>html>

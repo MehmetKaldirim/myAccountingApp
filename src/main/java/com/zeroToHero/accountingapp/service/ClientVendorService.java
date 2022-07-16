@@ -19,4 +19,5 @@ public interface ClientVendorService {
 
     ClientVendor findVendorById(Long vendorId);
 
+    String findClientNameById(Long id);
 }
