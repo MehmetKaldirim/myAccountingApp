@@ -2,6 +2,7 @@ package com.zeroToHero.accountingapp.repository;
 
 
 import com.zeroToHero.accountingapp.entity.ClientVendor;
+import com.zeroToHero.accountingapp.entity.Company;
 import com.zeroToHero.accountingapp.enums.CompanyType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,6 @@ public interface ClientVendorRepository extends JpaRepository<ClientVendor, Long
     String findClientNameById(@Param("id") Long id);
 
     Optional<ClientVendor> findByCompanyName(String companyName);
+
+    List<ClientVendor> findAllByCompany(Company compnay);
 }
