@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
@@ -94,22 +95,22 @@ public class SalesInvoiceController {
                     .collect(Collectors.toList());
             ProductDTO product = productService.findById(invoiceProduct.getProductId());
 
-            if (product.getProductStatus() == ProductStatus.ACTIVE && product.getQty().intValue() >= invoiceProduct.getQty()) {
-                BigInteger leftOverQty = BigInteger.valueOf(product.getQty().intValue() - invoiceProduct.getQty());
+            if (product.getProductStatus() == ProductStatus.ACTIVE && product.getQty().compareTo(invoiceProduct.getQty())>=0) {
+                BigDecimal leftOverQty = product.getQty().subtract(invoiceProduct.getQty());
                 product.setQty(leftOverQty);
                 productService.updateProduct(product);
                 invoiceService.approveInvoice(id);
-                int stocksToRemove = invoiceProduct.getQty();
+                BigDecimal stocksToRemove = invoiceProduct.getQty();
                 for(StockDetailsDTO stockDetailsDTO : sortedList) {
-                    if (stocksToRemove > 0) {
-                        if(stockDetailsDTO.getRemainingQuantity().intValue()>stocksToRemove){
-                            long remaining = stockDetailsDTO.getRemainingQuantity().intValue()-stocksToRemove;
-                            stockDetailsDTO.setRemainingQuantity(new BigInteger(String.valueOf(remaining)));
+                    if (stocksToRemove.compareTo(BigDecimal.ZERO) > 0) {
+                        if(stockDetailsDTO.getRemainingQuantity().compareTo(stocksToRemove)>0){
+                            BigDecimal remaining = stockDetailsDTO.getRemainingQuantity().subtract(stocksToRemove);
+                            stockDetailsDTO.setRemainingQuantity(remaining);
                             stockDetailsService.updateStockDetail(stockDetailsDTO);
-                            stocksToRemove = 0;
+                            stocksToRemove = BigDecimal.ZERO;
                         } else{
-                            stocksToRemove = stocksToRemove-stockDetailsDTO.getRemainingQuantity().intValue();
-                            stockDetailsDTO.setRemainingQuantity(new BigInteger("0"));
+                            stocksToRemove = stocksToRemove.subtract(stockDetailsDTO.getRemainingQuantity());
+                            stockDetailsDTO.setRemainingQuantity(BigDecimal.ZERO);
                             stockDetailsService.updateStockDetail(stockDetailsDTO);
                         }
                     }

@@ -10,9 +10,11 @@ import com.zeroToHero.accountingapp.entity.InvoiceProduct;
 import com.zeroToHero.accountingapp.entity.Product;
 import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
+import com.zeroToHero.accountingapp.enums.State;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.*;
 import com.zeroToHero.accountingapp.service.InvoiceProductService;
+import com.zeroToHero.accountingapp.service.InvoiceService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,14 +31,16 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     final private ProductRepository productRepository;
     final private MapperUtil mapperUtil;
     final private InvoiceRepository invoiceRepository;
+    final private InvoiceService invoiceService;
 
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, CompanyRepository companyRepository, ProductRepository productRepository, MapperUtil mapperUtil, InvoiceRepository invoiceRepository) {
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, CompanyRepository companyRepository, ProductRepository productRepository, MapperUtil mapperUtil, InvoiceRepository invoiceRepository, InvoiceService invoiceService) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.companyRepository = companyRepository;
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
         this.invoiceRepository = invoiceRepository;
+        this.invoiceService = invoiceService;
     }
 
     @Override
@@ -59,6 +63,8 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         Invoice invoice = invoiceRepository.findById(id).get();
         InvoiceProduct invoiceProduct = mapperUtil.convert(invoiceProductDTO, new InvoiceProduct());
         invoiceProduct.setInvoice(invoice);
+
+
         //get last id in invoiceProduct Table +1
         Long lastId = invoiceProductRepository.findHighestId().get()+1;
         invoiceProduct.setId(lastId);
@@ -66,6 +72,9 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         if(invoice.getInvoiceType()== InvoiceType.PURCHASE) invoiceProduct.setProfit(BigDecimal.ZERO);
         Product product = productRepository.getProductByName(invoiceProductDTO.getName()).get();
         invoiceProduct.setProduct(product);
+
+        System.out.println("ne null" + invoiceProduct);
+        invoiceProduct.setTax(invoiceService.calculateTaxForProduct(invoiceProduct));
         invoiceProductRepository.save (invoiceProduct);
     }
 
@@ -78,7 +87,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 .collect(Collectors.toList());
 
         for (InvoiceProductDTO each : invoiceProductDTOList) {
-            each.setTotal((BigDecimal.valueOf(each.getQty()).multiply(each.getPrice()).multiply(each.getTax().add(BigDecimal.valueOf(100)))).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.CEILING));
+            each.setTotal((each.getQty().multiply(each.getPrice()).multiply(each.getTax().add(BigDecimal.valueOf(100)))).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.CEILING));
         }
         return invoiceProductDTOList;
     }
@@ -124,6 +133,12 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
             each.setEnabled(false);
             invoiceProductRepository.save(each);
         }
+    }
+
+    @Override
+    public BigDecimal getTaxByInvoiceId(Long id) {
+        State state = invoiceRepository.findById(id).get().getClientVendor().getStateId();
+        return state.getState_tax();
     }
 
 }

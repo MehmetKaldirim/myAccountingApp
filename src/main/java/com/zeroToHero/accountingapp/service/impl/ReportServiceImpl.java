@@ -83,11 +83,11 @@ public class ReportServiceImpl implements ReportService {
                     .map(product->product.getPrice()).
                     reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
-            Integer purchasedQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE,user.getCompany())
+            BigDecimal purchasedQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE,user.getCompany())
                     .stream()
                     .filter(product->product.getName().equals(p.getName()))
                     .map(product->product.getQty()).
-                    reduce(0, (a, b) -> a + b);
+                    reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
             BigDecimal totalIncome = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,user.getCompany())
                     .stream()
@@ -95,11 +95,11 @@ public class ReportServiceImpl implements ReportService {
                     .map(product->product.getPrice()).
                     reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
-            Integer soldQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,user.getCompany())
+            BigDecimal soldQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,user.getCompany())
                     .stream()
                     .filter(product->product.getName().equals(p.getName()))
                     .map(product->product.getQty()).
-                    reduce(0, (a, b) -> a + b);
+                    reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
             list.add(new ReportDTO(p.getName(),purchasedQTY,soldQTY,totalCost,totalIncome));
         });

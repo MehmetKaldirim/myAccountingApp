@@ -8,6 +8,7 @@ import com.zeroToHero.accountingapp.dto.ProductDTO;
 import com.zeroToHero.accountingapp.entity.InvoiceProduct;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface InvoiceProductService {
@@ -33,4 +34,8 @@ public interface InvoiceProductService {
     List<InvoiceProductDTO> findAllByInvoiceId(Long id);
 
     void disableInvoiceProductsByInvoiceId(Long id);
+
+    BigDecimal getTaxByInvoiceId(Long id);
+
+
 }

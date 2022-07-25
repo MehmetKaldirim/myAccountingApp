@@ -11,8 +11,8 @@ import java.math.BigDecimal;
 @Data
 public class ReportDTO {
     private String name;
-    private Integer purchasedQty;
-    private Integer soldQty;
+    private BigDecimal purchasedQty;
+    private BigDecimal soldQty;
     private BigDecimal totalCost;
     private BigDecimal totalIncome;
 
