@@ -14,9 +14,11 @@ public interface CompanyService {
     void save(CompanyDTO company);
 
     CompanyDTO update(CompanyDTO dto);
+
     CompanyDTO findByEmail(String email);
 
     void reopen(Long id);
+
     void close(Long id);
 
 }
