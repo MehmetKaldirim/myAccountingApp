@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 public class ClientVendorServiceImpl implements ClientVendorService {
 
@@ -47,14 +48,19 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public void save(ClientVendorDTO dto) {
         dto.setEnabled(true);
+        dto.setCompany(userService.findCompanyByLoggedInUser());
         clientVendorRepository.save(mapperUtil.convert(dto, new ClientVendor()));
     }
 
     @Override
     public ClientVendorDTO update(ClientVendorDTO dto) {
+
+
         ClientVendor client = clientVendorRepository.findByEmail(dto.getEmail());
         ClientVendor convertedClient = mapperUtil.convert(dto,new ClientVendor());
         convertedClient.setId(client.getId());
+        convertedClient.setEnabled(client.getEnabled());
+        convertedClient.setCompany(userService.findCompanyByLoggedInUser());
         clientVendorRepository.save(convertedClient);
         return findByEmail(dto.getEmail());
     }
@@ -67,21 +73,19 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public List<ClientVendorDTO> findAllByCompanyType(CompanyType companyType) {
-        return clientVendorRepository.findAllByType (companyType)
+        List<ClientVendorDTO> clientVendorList = clientVendorRepository.findAllByTypeAndCompany (companyType,userService.findCompanyByLoggedInUser())
                 .stream()
                 .map(p -> mapperUtil.convert(p, new ClientVendorDTO()))
                 .collect(Collectors.toList());
 
-    }
+        return clientVendorList;
 
-    @Override
-    public ClientVendor findVendorById(Long vendorId) {
-        return clientVendorRepository.findById(vendorId).get();
     }
 
     @Override
     public String findClientNameById(Long id) {
         return clientVendorRepository.findClientNameById(id);
     }
+
 
 }
