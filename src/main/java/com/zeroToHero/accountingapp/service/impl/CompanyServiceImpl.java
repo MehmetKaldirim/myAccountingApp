@@ -9,19 +9,24 @@ import com.zeroToHero.accountingapp.enums.CompanyType;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.CompanyRepository;
 import com.zeroToHero.accountingapp.service.CompanyService;
+import com.zeroToHero.accountingapp.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
+
     private final CompanyRepository companyRepository;
     private final MapperUtil mapperUtil;
+    private final UserService userService;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, UserService userService) {
         this.companyRepository = companyRepository;
         this.mapperUtil = mapperUtil;
+        this.userService = userService;
     }
 
     @Override
@@ -78,5 +83,16 @@ public class CompanyServiceImpl implements CompanyService {
 
     }
 
+    @Override
+    public BigDecimal findTaxByCompany() {
+
+        BigDecimal tax = userService.findCompanyByLoggedInUser().getState().getState_tax();
+        return tax;
+    }
+
+    @Override
+    public Company findCompanyByLoggedInUser() {
+        return userService.findCompanyByLoggedInUser();
+    }
 
 }

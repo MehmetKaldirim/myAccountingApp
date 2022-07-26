@@ -20,5 +20,10 @@ public interface UserService {
 
     UserDTO findByEmail(String email);
 
-    Company findCompanyByUserName();
+    Company findCompanyByLoggedInUser();
+
+    CompanyDTO findCompanyDTOByLoggedInUser();
+
+    UserDTO findLoggedInUser();
+
 }

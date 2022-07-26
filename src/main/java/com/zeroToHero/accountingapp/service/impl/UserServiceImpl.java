@@ -5,10 +5,13 @@ import com.zeroToHero.accountingapp.dto.UserDTO;
 import com.zeroToHero.accountingapp.entity.Company;
 import com.zeroToHero.accountingapp.entity.Product;
 import com.zeroToHero.accountingapp.entity.User;
+import com.zeroToHero.accountingapp.entity.common.UserPrincipal;
 import com.zeroToHero.accountingapp.enums.UserStatus;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.UserRepository;
 import com.zeroToHero.accountingapp.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,24 +22,25 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, MapperUtil mapperUtil) {
+    public UserServiceImpl(UserRepository userRepository, MapperUtil mapperUtil, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.mapperUtil = mapperUtil;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public List<UserDTO> listAllUsers() {
-
-
         List<User> list = userRepository.findAllByCompany(findCompanyByLoggedInUser());
+
         return list.stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
     }
 
 
     @Override
     public void save(UserDTO dto) {
-
+        dto.setPassWord(passwordEncoder.encode(dto.getPassWord()));
         dto.setEnabled(true);
         userRepository.save(mapperUtil.convert(dto, new User()));
     }
@@ -73,10 +77,28 @@ public class UserServiceImpl implements UserService {
         return mapperUtil.convert(user, new UserDTO());
     }
 
+
+
     @Override
-    public Company findCompanyByUserName() {
-        User user = userRepository.findByEmail("admin@company2.com");
-        return user.getCompany();
+    public Company findCompanyByLoggedInUser() {
+        final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Company company = ((UserPrincipal) principal).getCompany();
+        return company;
+    }
+
+    @Override
+    public CompanyDTO findCompanyDTOByLoggedInUser() {
+        final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Company company = ((UserPrincipal) principal).getCompany();
+        return mapperUtil.convert(company, new CompanyDTO());
+    }
+
+    @Override
+    public UserDTO findLoggedInUser() {
+        final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserPrincipal) principal).getEmail();
+        UserDTO userDTO = findByEmail(email);
+        return userDTO;
     }
 
 }
