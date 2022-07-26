@@ -95,35 +95,31 @@ public class SalesInvoiceController {
                     .collect(Collectors.toList());
             ProductDTO product = productService.findById(invoiceProduct.getProductId());
 
-            if (product.getProductStatus() == ProductStatus.ACTIVE && product.getQty().compareTo(invoiceProduct.getQty())>=0) {
-                BigDecimal leftOverQty = product.getQty().subtract(invoiceProduct.getQty());
+            if (product.getProductStatus() == ProductStatus.ACTIVE && product.getQty().intValue() >= invoiceProduct.getQty()) {
+                BigInteger leftOverQty = BigInteger.valueOf(product.getQty().intValue() - invoiceProduct.getQty());
                 product.setQty(leftOverQty);
                 productService.updateProduct(product);
                 invoiceService.approveInvoice(id);
-                BigDecimal stocksToRemove = invoiceProduct.getQty();
+                int stocksToRemove = invoiceProduct.getQty();
                 for(StockDetailsDTO stockDetailsDTO : sortedList) {
-                    if (stocksToRemove.compareTo(BigDecimal.ZERO) > 0) {
-                        if(stockDetailsDTO.getRemainingQuantity().compareTo(stocksToRemove)>0){
-                            BigDecimal remaining = stockDetailsDTO.getRemainingQuantity().subtract(stocksToRemove);
-                            stockDetailsDTO.setRemainingQuantity(remaining);
+                    if (stocksToRemove > 0) {
+                        if(stockDetailsDTO.getRemainingQuantity().intValue()>stocksToRemove){
+                            long remaining = stockDetailsDTO.getRemainingQuantity().intValue()-stocksToRemove;
+                            stockDetailsDTO.setRemainingQuantity(new BigInteger(String.valueOf(remaining)));
                             stockDetailsService.updateStockDetail(stockDetailsDTO);
-                            stocksToRemove = BigDecimal.ZERO;
+                            stocksToRemove = 0;
                         } else{
-                            stocksToRemove = stocksToRemove.subtract(stockDetailsDTO.getRemainingQuantity());
-                            stockDetailsDTO.setRemainingQuantity(BigDecimal.ZERO);
+                            stocksToRemove = stocksToRemove-stockDetailsDTO.getRemainingQuantity().intValue();
+                            stockDetailsDTO.setRemainingQuantity(new BigInteger("0"));
                             stockDetailsService.updateStockDetail(stockDetailsDTO);
                         }
                     }
-
                 }
 
             } else {
                 return "invoice/message";
             }
-
-
         }
-
         return "redirect:/invoice/salesInvoiceList";
     }
 
@@ -156,11 +152,13 @@ public class SalesInvoiceController {
         model.addAttribute("companyName", invoiceDTO.getClientVendor().getCompanyName());
         model.addAttribute("date", invoiceService.getLocalDate());
         model.addAttribute("invoiceId", invoiceService.getNextInvoiceIdSale());
+        model.addAttribute("tax", companyService.findTaxByCompany());
         model.addAttribute("invoiceProductDTO", new InvoiceProductDTO());
         model.addAttribute("products", productService.listAllProducts());
         model.addAttribute("invoiceProducts", invoiceProductService.findAllInvoiceProductsByInvoiceId(id));
         return "invoice/sales-invoice-select-product";
     }
+
     @PostMapping("/salesInvoiceSelectProduct/{id}")
     public String postProductDetailsForInvoiceProduct(@PathVariable("id") Long id, @ModelAttribute("invoiceProductDTO") InvoiceProductDTO invoiceProductDTO) {
         invoiceProductService.addInvoiceProductByInvoiceId(id, invoiceProductDTO);
@@ -187,6 +185,5 @@ public class SalesInvoiceController {
         invoiceProductService.deleteInvoiceProductById(ipid);
         return "redirect:/invoice/salesInvoiceSelectProduct/" + id;
     }
-
 
 }

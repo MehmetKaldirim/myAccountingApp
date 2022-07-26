@@ -1,7 +1,5 @@
 package com.zeroToHero.accountingapp.dto;
 
-
-import com.zeroToHero.accountingapp.entity.ClientVendor;
 import com.zeroToHero.accountingapp.entity.Company;
 import com.zeroToHero.accountingapp.enums.CompanyType;
 import com.zeroToHero.accountingapp.enums.State;
@@ -11,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -18,7 +17,8 @@ public class ClientVendorDTO {
 
     private Long id;
 
-
+    @NotBlank
+    @Size(max = 15, min = 2)
     private String companyName;
 
     @NotBlank
@@ -44,6 +44,4 @@ public class ClientVendorDTO {
     private boolean enabled;
 
     private Company company;
-
-
 }

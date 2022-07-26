@@ -11,8 +11,10 @@ import com.zeroToHero.accountingapp.enums.InvoiceType;
 import com.zeroToHero.accountingapp.exception.RecordNotFoundException;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.*;
+import com.zeroToHero.accountingapp.service.CompanyService;
 import com.zeroToHero.accountingapp.service.InvoiceProductService;
 import com.zeroToHero.accountingapp.service.InvoiceService;
+import com.zeroToHero.accountingapp.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,7 +31,6 @@ import java.util.stream.Collectors;
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
 
-
     private final MapperUtil mapperUtil;
     private final InvoiceRepository invoiceRepository;
     private final InvoiceProductRepository invoiceProductRepository;
@@ -37,8 +38,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final ProductRepository productRepository;
     private final StockDetailsRepository stockDetailsRepository;
     private final ClientVendorRepository clientVendorRepository;
+    private final InvoiceProductService invoiceProductService;
+    private final CompanyService companyService;
+    private final UserService userService;
 
-    public InvoiceServiceImpl(MapperUtil mapperUtil, InvoiceRepository invoiceRepository, InvoiceProductRepository invoiceProductRepository, CompanyRepository companyRepository, ProductRepository productRepository, StockDetailsRepository stockDetailsRepository, ClientVendorRepository clientVendorRepository) {
+    public InvoiceServiceImpl(MapperUtil mapperUtil, InvoiceRepository invoiceRepository, InvoiceProductRepository invoiceProductRepository, CompanyRepository companyRepository, ProductRepository productRepository, StockDetailsRepository stockDetailsRepository, ClientVendorRepository clientVendorRepository, InvoiceProductService invoiceProductService, CompanyService companyService, UserService userService) {
         this.mapperUtil = mapperUtil;
         this.invoiceRepository = invoiceRepository;
         this.invoiceProductRepository = invoiceProductRepository;
@@ -46,6 +50,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.productRepository = productRepository;
         this.stockDetailsRepository = stockDetailsRepository;
         this.clientVendorRepository = clientVendorRepository;
+        this.invoiceProductService = invoiceProductService;
+        this.companyService = companyService;
+        this.userService = userService;
     }
 
     @Override
@@ -107,8 +114,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceDTO> listAllByInvoiceType(InvoiceType invoiceType) {
         //map invoiceProduct of each Invoice -> DTO
-        List<InvoiceDTO> listInvoiceDTO = invoiceRepository.findAllByInvoiceType(invoiceType)
+        List<InvoiceDTO> listInvoiceDTO = invoiceRepository.findAllByInvoiceTypeAndCompany(invoiceType,userService.findCompanyByLoggedInUser())
                 .stream().filter(Invoice::isEnabled).map(p -> mapperUtil.convert(p, new InvoiceDTO())).collect(Collectors.toList());
+
 
         //map all invoice products from invoice to invoiceProduct DTO
         for (InvoiceDTO each : listInvoiceDTO) {
@@ -128,16 +136,20 @@ public class InvoiceServiceImpl implements InvoiceService {
             for (InvoiceDTO eachInvoiceDTO : listInvoiceDTO) {
                 BigDecimal totalTax = BigDecimal.valueOf(0);
                 for (InvoiceProductDTO each : eachInvoiceDTO.getInvoiceProductList()) {
-                    totalTax = totalTax.add(each.getPrice().multiply(each.getQty()).multiply(each.getTax()).divide(BigDecimal.valueOf(100)));
+                    each.setTax(eachInvoiceDTO.getClientVendor().getStateId().getState_tax());
+                    totalTax = totalTax.add(each.getPrice().multiply(BigDecimal.valueOf(each.getQty())).multiply(each.getTax()).divide(BigDecimal.valueOf(100)));
                 }
                 eachInvoiceDTO.setTax(totalTax.setScale(2, RoundingMode.CEILING));
             }
         } else {   //todo Vitaly Bahrom - set tax
-            listInvoiceDTO.forEach(p -> p.setTax((p.getCost().multiply(BigDecimal.valueOf(0.07))).setScale(2, RoundingMode.CEILING)));
+            BigDecimal tax = companyService.findTaxByCompany().divide(BigDecimal.valueOf(100));
+
+            listInvoiceDTO.forEach(p -> p.setTax((p.getCost().multiply(tax)).setScale(2, RoundingMode.CEILING)));
         }
 
         //set total
         listInvoiceDTO.forEach(p -> p.setTotal(((p.getCost()).add(p.getTax())).setScale(2, RoundingMode.CEILING)));
+
         return listInvoiceDTO;
     }
 
@@ -149,7 +161,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .map(p -> mapperUtil.convert(p, new InvoiceProductDTO())).collect(Collectors.toList());
         BigDecimal cost = BigDecimal.valueOf(0);
         for (InvoiceProductDTO each : invoiceProductListById) {
-            BigDecimal currItemCost = each.getPrice().multiply(each.getQty());
+            BigDecimal currItemCost = each.getPrice().multiply(BigDecimal.valueOf(each.getQty()));
             cost = cost.add(currItemCost);
         }
         return cost;
@@ -175,6 +187,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
         invoice.setInvoiceNumber(invoiceNumber);
         invoice.setInvoiceDate(LocalDate.now());
+        invoice.setCompany(userService.findCompanyByLoggedInUser());
         invoice.setInvoiceStatus(InvoiceStatus.PENDING);
 
         invoice = invoiceRepository.save(invoice);
@@ -199,12 +212,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void enableInvoice(Long id) {
         Invoice invoice = invoiceRepository.findById(id).get();
+
         // set status enabled for all product invoices in the list
         List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceId(id);
+
+        List<InvoiceProduct> invoiceProductListSale = invoiceProductList.stream().filter(i->i.getInvoice().getInvoiceType().equals(InvoiceType.SALE)).collect(Collectors.toList());
+        for (InvoiceProduct each : invoiceProductListSale) {
+            each.setTax(calculateTaxByInvoiceIdForSale(each));
+            invoiceProductRepository.save(each);
+        }
+
+
         for (InvoiceProduct eachInvoiceProduct : invoiceProductList) {
             eachInvoiceProduct.setEnabled(true);
         }
         invoice.setEnabled(true);
+
         invoiceRepository.save(invoice);
     }
 
@@ -212,16 +235,25 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void approvePurchaseInvoice(Long id) {
         List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findAllByInvoiceId(id);
         for (InvoiceProduct eachInvoiceProduct : invoiceProductList) {
+
+            //set tax
+            eachInvoiceProduct.setTax(calculateTaxByInvoiceIdForPurchase(id,eachInvoiceProduct));
+            invoiceProductRepository.save(eachInvoiceProduct);
+
             //update stock
             Long productId = eachInvoiceProduct.getProduct().getId();
-            BigDecimal additionalQty = eachInvoiceProduct.getQty();
+            Integer additionalQty = eachInvoiceProduct.getQty();
             Product product = productRepository.findProductById(productId).get();
-            product.setQty(product.getQty().add(additionalQty));
+            product.setQty(product.getQty().add(BigInteger.valueOf(additionalQty)));
             productRepository.save(product);
         }
+
+
         //change status of invoice -> approved
         Invoice invoice = invoiceRepository.findById(id).get();
         invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
+
+
         invoiceRepository.save(invoice);
 
     }
@@ -233,9 +265,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         for (InvoiceProduct eachInvoiceProduct : invoiceProductList) {
             StockDetails stockDetails = new StockDetails();
             stockDetails.setProduct(eachInvoiceProduct.getProduct());
+            eachInvoiceProduct.setTax(invoiceProductService.getTaxByInvoiceId(id)); //new
             stockDetails.setPrice(eachInvoiceProduct.getTax().add(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(100)).multiply(eachInvoiceProduct.getPrice()));
-            stockDetails.setQuantity(eachInvoiceProduct.getQty());
-            stockDetails.setRemainingQuantity(eachInvoiceProduct.getQty());
+            stockDetails.setQuantity(BigInteger.valueOf(eachInvoiceProduct.getQty()));
+            stockDetails.setRemainingQuantity(BigInteger.valueOf(eachInvoiceProduct.getQty()));
             stockDetails.setIDate(LocalDateTime.now());
             stockDetailsRepository.save(stockDetails);
 
@@ -244,20 +277,21 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public BigDecimal calculateTaxForProduct(InvoiceProduct invoiceProduct) {
+    public BigDecimal calculateTaxByInvoiceIdForPurchase(Long id, InvoiceProduct invoiceProduct) {
 
-        BigDecimal taxPercentage = invoiceProduct.getInvoice().getClientVendor().getStateId().getState_tax();
+        BigDecimal taxPercantage = invoiceRepository.findById(id).get().getClientVendor().getStateId().getState_tax();
+        BigDecimal calculatedTax = (invoiceProduct.getPrice().multiply(BigDecimal.valueOf(invoiceProduct.getQty())).multiply(taxPercantage).divide(BigDecimal.valueOf(100)));
 
-        BigDecimal tax = calculatePriceForProduct(invoiceProduct).multiply(taxPercentage).divide(BigDecimal.valueOf(100));
-
-        return tax;
+        return calculatedTax;
     }
 
     @Override
-    public BigDecimal calculatePriceForProduct(InvoiceProduct invoiceProduct) {
-        BigDecimal price = invoiceProduct.getPrice().multiply(invoiceProduct.getQty());
+    public BigDecimal calculateTaxByInvoiceIdForSale(InvoiceProduct invoiceProduct) {
+        BigDecimal taxPercantage = companyService.findTaxByCompany().divide(BigDecimal.valueOf(100));
+        BigDecimal calculatedTax = (invoiceProduct.getPrice().multiply(BigDecimal.valueOf(invoiceProduct.getQty())).multiply(taxPercantage).divide(BigDecimal.valueOf(100)));
 
-        return null;
+
+        return calculatedTax;
     }
 
 

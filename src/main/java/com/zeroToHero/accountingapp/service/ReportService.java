@@ -3,6 +3,7 @@ package com.zeroToHero.accountingapp.service;
 import com.zeroToHero.accountingapp.dto.InvoiceDTO;
 import com.zeroToHero.accountingapp.dto.ReportDTO;
 import com.zeroToHero.accountingapp.entity.InvoiceProduct;
+import com.zeroToHero.accountingapp.entity.Payment;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,4 +20,6 @@ public interface ReportService {
     List<InvoiceDTO> findLast3ByCompany();
 
     List<InvoiceProduct> findAllByCompany();
+
+    List<Payment> listAllByYearAndCompany(String year);
 }

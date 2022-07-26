@@ -6,11 +6,13 @@ import com.zeroToHero.accountingapp.dto.ReportDTO;
 import com.zeroToHero.accountingapp.dto.UserDTO;
 import com.zeroToHero.accountingapp.entity.Invoice;
 import com.zeroToHero.accountingapp.entity.InvoiceProduct;
+import com.zeroToHero.accountingapp.entity.Payment;
 import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.InvoiceProductRepository;
 import com.zeroToHero.accountingapp.repository.InvoiceRepository;
+import com.zeroToHero.accountingapp.repository.PaymentRepository;
 import com.zeroToHero.accountingapp.repository.UserRepository;
 import com.zeroToHero.accountingapp.service.InvoiceService;
 import com.zeroToHero.accountingapp.service.ReportService;
@@ -32,14 +34,16 @@ public class ReportServiceImpl implements ReportService {
     private final MapperUtil mapperUtil;
     private final InvoiceService invoiceService;
     private final UserService userService;
+    private final PaymentRepository paymentRepository;
 
-    public ReportServiceImpl(InvoiceProductRepository invoiceProductRepository, UserRepository userRepository, InvoiceRepository invoiceRepository, MapperUtil mapperUtil, InvoiceService invoiceService, UserService userService) {
+    public ReportServiceImpl(InvoiceProductRepository invoiceProductRepository, UserRepository userRepository, InvoiceRepository invoiceRepository, MapperUtil mapperUtil, InvoiceService invoiceService, UserService userService, PaymentRepository paymentRepository) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.userRepository = userRepository;
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.invoiceService = invoiceService;
         this.userService = userService;
+        this.paymentRepository = paymentRepository;
     }
 
     @Override
@@ -50,17 +54,17 @@ public class ReportServiceImpl implements ReportService {
         Map<String, BigDecimal> profitLoss = new HashMap<>();
 
 
-        BigDecimal totalCost = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE, userService.findCompanyByUserName()).stream().
+        BigDecimal totalCost = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE, userService.findCompanyByLoggedInUser()).stream().
                 map(p->p.getPrice()).
                 reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
 
-        BigDecimal totalSale = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE, userService.findCompanyByUserName()).stream().
+        BigDecimal totalSale = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE, userService.findCompanyByLoggedInUser()).stream().
                 map(p->p.getPrice()).
                 reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
 
-        BigDecimal totalTax = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE, userService.findCompanyByUserName()).stream().
+        BigDecimal totalTax = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE, userService.findCompanyByLoggedInUser()).stream().
                 map(p->p.getTax()).
                 reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
@@ -75,31 +79,30 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Set<ReportDTO> calculateByProducts() {
         Set<ReportDTO> list= new HashSet<>();
-        User user = userRepository.findByEmail("admin@company2.com");
-        invoiceProductRepository.findAllByInvoice_Company(user.getCompany()).stream().forEach(p->{
-            BigDecimal totalCost = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE,user.getCompany())
+        invoiceProductRepository.findAllByInvoice_Company(userService.findCompanyByLoggedInUser()).stream().forEach(p->{
+            BigDecimal totalCost = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE,userService.findCompanyByLoggedInUser())
                     .stream()
                     .filter(product->product.getName().equals(p.getName()))
                     .map(product->product.getPrice()).
                     reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
-            BigDecimal purchasedQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE,user.getCompany())
+            Integer purchasedQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.PURCHASE,userService.findCompanyByLoggedInUser())
                     .stream()
                     .filter(product->product.getName().equals(p.getName()))
                     .map(product->product.getQty()).
-                    reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+                    reduce(0, (a, b) -> a + b);
 
-            BigDecimal totalIncome = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,user.getCompany())
+            BigDecimal totalIncome = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,userService.findCompanyByLoggedInUser())
                     .stream()
                     .filter(product->product.getName().equals(p.getName()))
                     .map(product->product.getPrice()).
                     reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
-            BigDecimal soldQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,user.getCompany())
+            Integer soldQTY = invoiceProductRepository.findAllByInvoice_InvoiceTypeAndInvoice_Company(InvoiceType.SALE,userService.findCompanyByLoggedInUser())
                     .stream()
                     .filter(product->product.getName().equals(p.getName()))
                     .map(product->product.getQty()).
-                    reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+                    reduce(0, (a, b) -> a + b);
 
             list.add(new ReportDTO(p.getName(),purchasedQTY,soldQTY,totalCost,totalIncome));
         });
@@ -108,7 +111,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<InvoiceDTO> findLast3ByCompany() {
-        List<InvoiceDTO> listInvoiceDTO = invoiceRepository.findLast3InvoiceByDate(userService.findCompanyByUserName().getTitle())
+        List<InvoiceDTO> listInvoiceDTO = invoiceRepository.findLast3InvoiceByDate(userService.findCompanyByLoggedInUser().getTitle())
                 .stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
         listInvoiceDTO.forEach(p -> p.setCost((invoiceService.calculateCostByInvoiceID(p.getId())).setScale(2, RoundingMode.CEILING)));
         listInvoiceDTO.forEach(p -> p.setTax((p.getCost().multiply(BigDecimal.valueOf(0.07))).setScale(2, RoundingMode.CEILING)));
@@ -119,7 +122,13 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<InvoiceProduct> findAllByCompany() {
 
-        return invoiceProductRepository.findAllByInvoice_Company(userService.findCompanyByUserName());
+        return invoiceProductRepository.findAllByInvoice_Company(userService.findCompanyByLoggedInUser());
+    }
+
+    @Override
+    public List<Payment> listAllByYearAndCompany(String year) {
+        return paymentRepository.findPaymentByYearOrderByMonth(year).stream()
+                .collect(Collectors.toList());
     }
 
 

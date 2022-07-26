@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 public class InvoiceProduct extends BaseEntity {
 
     private String name;
-    private BigDecimal qty;
+    private Integer qty;
     private BigDecimal price;
     private BigDecimal tax;
     private BigDecimal profit;
