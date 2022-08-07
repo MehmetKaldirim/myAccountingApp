@@ -19,7 +19,7 @@ public interface ProductService {
 
     void updateProduct(ProductDTO product);
 
-
+    void create(ProductDTO productDTO);
 
     void save(ProductDTO productDTO);
 

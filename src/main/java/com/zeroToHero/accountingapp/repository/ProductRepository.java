@@ -20,6 +20,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     ProductDTO findByDescription(String description);
 
+
     @Query(value = "SELECT MAX(id) FROM invoice_product",nativeQuery = true)
     List<Product> findAllByCompanyId(@Param("com") Long companyId);
 

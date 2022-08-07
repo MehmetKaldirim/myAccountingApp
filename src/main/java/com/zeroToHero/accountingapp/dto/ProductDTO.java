@@ -26,7 +26,7 @@ public class ProductDTO {
     @NotNull
     private CategoryDTO category;
 
-//    @NotNull
+    //    @NotNull
     private BigInteger qty;
 
     @NotNull
@@ -35,19 +35,19 @@ public class ProductDTO {
     @NotNull
     private BigInteger lowLimitAlert;
 
-//    @NotBlank
+    //    @NotBlank
     private BigInteger tax;
 
 
     private CompanyDTO company;
 
-//    @NotBlank
+    //    @NotBlank
     private Boolean enabled;
 
     @NotNull
     private ProductStatus productStatus;
 
-//    @NotBlank
+    //    @NotBlank
     private BigInteger newColumn;
 
 }

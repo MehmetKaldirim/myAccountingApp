@@ -2,36 +2,37 @@ package com.zeroToHero.accountingapp.service.impl;
 
 
 import com.zeroToHero.accountingapp.dto.ProductDTO;
+import com.zeroToHero.accountingapp.entity.Category;
+import com.zeroToHero.accountingapp.entity.Company;
 import com.zeroToHero.accountingapp.entity.Product;
 import com.zeroToHero.accountingapp.entity.User;
 import com.zeroToHero.accountingapp.mapper.MapperUtil;
 import com.zeroToHero.accountingapp.repository.ProductRepository;
 import com.zeroToHero.accountingapp.repository.UserRepository;
 import com.zeroToHero.accountingapp.service.ProductService;
+import com.zeroToHero.accountingapp.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ProductRepository productRepository;
     private final MapperUtil mapperUtil;
 
-    public ProductServiceImpl(UserRepository userRepository, ProductRepository productRepository, MapperUtil mapperUtil) {
-        this.userRepository = userRepository;
+    public ProductServiceImpl(UserService userService, ProductRepository productRepository, MapperUtil mapperUtil) {
+        this.userService = userService;
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
     }
 
     @Override
     public List<ProductDTO> listAllProducts() {
-        // TODO security by username or email
-        // String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User loggedInUser = userRepository.findByEmail("manager1@company2.com");
-        List<Product> list = productRepository.findAllByCompany(loggedInUser.getCompany());
+        List<Product> list = productRepository.findAllByCompany(userService.findCompanyByLoggedInUser());
         return list.stream()
                 .map(product -> mapperUtil.convert(product, new ProductDTO())).collect(Collectors.toList());
     }
@@ -52,22 +53,40 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(p);
     }
 
-
-
+    @Override
+    public void create(ProductDTO productDTO) {
+        productDTO.setQty(BigInteger.ZERO);
+        save(productDTO);
+    }
     @Override
     public void save(ProductDTO productDTO) {
-
+        Product convertedProduct = mapperUtil.convert(productDTO, new Product());
+        convertedProduct.setCompany(userService.findCompanyByLoggedInUser());
+        convertedProduct.setEnabled(true);
+        productRepository.save(convertedProduct);
     }
 
     @Override
-    public ProductDTO update(ProductDTO productDTO) {
-        return null;
+    public ProductDTO update(ProductDTO dto) {
+        Product product = productRepository.findById(dto.getId()).get();
+        Product convertedProduct = mapperUtil.convert(dto,new Product());
+        convertedProduct.setCompany(userService.findCompanyByLoggedInUser());
+        convertedProduct.setEnabled(product.getEnabled());
+        convertedProduct.setQty(product.getQty());
+        productRepository.save(convertedProduct);
+        return findById(convertedProduct.getId());
     }
 
     @Override
     public void delete(Long id) {
-
+        Product product = productRepository.findById(id).get();
+        product.setIsDeleted(true);
+        productRepository.save(product);
     }
 
+    @Override
+    public List<Product> findAllByCategoryAndCompany(Category category, Company companyByLoggedInUser) {
+        return null;
+    }
 
 }
