@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/company")
 public class CompanyController {
-
     private final CompanyService companyService;
 
     public CompanyController(CompanyService companyService) {

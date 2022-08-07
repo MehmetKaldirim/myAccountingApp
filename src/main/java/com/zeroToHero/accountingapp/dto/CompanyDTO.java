@@ -29,3 +29,4 @@ public class CompanyDTO {
     private State state;
     private CompanyStatus companyStatus;
 }
+
