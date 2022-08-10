@@ -6,6 +6,7 @@ import com.zeroToHero.accountingapp.enums.ProductStatus;
 import com.zeroToHero.accountingapp.enums.Unit;
 import com.zeroToHero.accountingapp.service.CategoryService;
 import com.zeroToHero.accountingapp.service.ProductService;
+import com.zeroToHero.accountingapp.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
