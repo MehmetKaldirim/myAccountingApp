@@ -14,11 +14,18 @@ public interface UserService {
 
     UserDTO update(UserDTO dto);
 
+    void deleteByEmail(String email );
+
     void delete(String username);
 
     UserDTO findById(Long id);
 
     UserDTO findByEmail(String email);
 
-    Company findCompanyByUserName();
+    Company findCompanyByLoggedInUser();
+
+    CompanyDTO findCompanyDTOByLoggedInUser();
+
+    UserDTO findLoggedInUser();
+
 }

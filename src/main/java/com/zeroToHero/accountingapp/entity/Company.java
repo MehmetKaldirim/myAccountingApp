@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
-import java.time.LocalDate;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -18,17 +20,16 @@ import java.time.LocalDate;
 @Setter
 @Where(clause = "is_deleted=false")
 public class Company extends BaseEntity {
-
+    @Column(unique = true, nullable = false)
     private String title;
     private String address1;
     private String address2;
     private String zip;
     private String representative;
-    @Column(unique = true, nullable = false)
     private String email;
     @Column(columnDefinition = "DATE")
-    private LocalDate establishmentDate;
-    private boolean enabled;
+    private LocalDateTime establishmentDate;
+    private Boolean enabled;
     private String phone;
     @Enumerated(EnumType.STRING)
     private State state;

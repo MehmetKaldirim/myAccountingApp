@@ -1,6 +1,5 @@
 package com.zeroToHero.accountingapp.dto;
 
-
 import com.zeroToHero.accountingapp.enums.ProductStatus;
 import com.zeroToHero.accountingapp.enums.Unit;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @NoArgsConstructor
@@ -28,27 +26,28 @@ public class ProductDTO {
     @NotNull
     private CategoryDTO category;
 
-    @NotNull
-    private BigDecimal qty;
+    //    @NotNull
+    private BigInteger qty;
 
     @NotNull
     private Unit unit;
 
     @NotNull
-    private BigDecimal lowLimitAlert;
+    private BigInteger lowLimitAlert;
 
-//    @NotBlank
-    private BigDecimal tax;
+    //    @NotBlank
+    private BigInteger tax;
 
 
     private CompanyDTO company;
 
-//    @NotBlank
+    //    @NotBlank
     private Boolean enabled;
 
     @NotNull
     private ProductStatus productStatus;
 
-//    @NotBlank
-    private BigDecimal newColumn;
+    //    @NotBlank
+    private BigInteger newColumn;
+
 }

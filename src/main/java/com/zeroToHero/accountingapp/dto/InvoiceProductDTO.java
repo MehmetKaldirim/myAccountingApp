@@ -1,8 +1,6 @@
 package com.zeroToHero.accountingapp.dto;
 
 
-import com.zeroToHero.accountingapp.entity.Invoice;
-import com.zeroToHero.accountingapp.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +11,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -27,7 +26,7 @@ public class InvoiceProductDTO {
 
     @NotBlank
     @Size(min = 0)
-    private BigDecimal qty;
+    private Integer qty;
 
     @NotBlank
     @Size(min = 0)

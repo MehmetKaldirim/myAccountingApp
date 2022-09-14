@@ -7,9 +7,10 @@ import com.zeroToHero.accountingapp.dto.PaymentDTO;
 import java.util.List;
 
 public interface PaymentService {
+
   List<PaymentDTO> listAllPayments();
 
-  List<PaymentDTO> listAllByYear(String year);
+  List<PaymentDTO> listByYearAndCompany(String year);
 
   PaymentDTO findById(Long id);
 

@@ -1,9 +1,11 @@
 package com.zeroToHero.accountingapp.entity;
 
 
-import com.zeroToHero.accountingapp.enums.InvoiceType;
 import com.zeroToHero.accountingapp.enums.InvoiceStatus;
-import lombok.*;
+import com.zeroToHero.accountingapp.enums.InvoiceType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -11,11 +13,12 @@ import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @Where(clause = "is_deleted=false")
 public class Invoice extends BaseEntity {
 
+    @Column(unique = true)
     private String invoiceNumber;
 
     @Enumerated(EnumType.STRING)
@@ -36,5 +39,8 @@ public class Invoice extends BaseEntity {
     private Company company;
 
     private boolean enabled;
+//
+//    @OneToMany
+//    List<InvoiceProduct> invoiceProductList;
 
 }

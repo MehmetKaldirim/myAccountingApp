@@ -1,18 +1,15 @@
 package com.zeroToHero.accountingapp.dto;
 
-
 import com.zeroToHero.accountingapp.entity.ClientVendor;
 import com.zeroToHero.accountingapp.enums.InvoiceStatus;
 import com.zeroToHero.accountingapp.enums.InvoiceType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;

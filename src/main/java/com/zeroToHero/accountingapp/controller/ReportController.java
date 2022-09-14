@@ -7,19 +7,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.DateFormatSymbols;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
 
 @Controller
 @RequestMapping("/report")
 public class ReportController {
-
-
 
 
     private final ReportService reportService;
@@ -38,6 +38,14 @@ public class ReportController {
         return "/report/stock-report";
     }
 
+    @GetMapping("/payment")
+    public String showAllPayments(Model model, @RequestParam(defaultValue = "2022") String year) {
+        String[] month = new DateFormatSymbols().getMonths();
+        model.addAttribute("localDateTime", LocalDateTime.now());
+        model.addAttribute("year", year);
+        model.addAttribute("payments", reportService.listAllByYearAndCompany(year));
+        return "/report/payment-report";
+    }
 
     @GetMapping("/profit")
     public String profitLossReport(Model model){
@@ -51,18 +59,17 @@ public class ReportController {
     public String exportPDFButton(Model model){
         model.addAttribute("profitLoss", reportService.profitLoss());
         model.addAttribute("productsTotal", reportService.calculateByProducts());
-        model.addAttribute("company", userService.findCompanyByUserName());
+        model.addAttribute("company", userService.findCompanyByLoggedInUser());
 
         return "/report/export-pdf-button";
     }
-
 
     @GetMapping("/downloadPDF")
     public void downloadReceipt(HttpServletResponse response) throws IOException {
         Map<String, Object> data = new HashMap<>();
         data.put("profitLoss", reportService.profitLoss());
         data.put("productsList", reportService.calculateByProducts());
-        data.put("company", userService.findCompanyByUserName());
+        data.put("company", userService.findCompanyByLoggedInUser());
 
 
         ByteArrayInputStream exportedData = exportPDFService.exportReceiptPdf("report", data);
@@ -70,4 +77,5 @@ public class ReportController {
         response.setHeader("Content-Disposition", "attachment; filename=report.pdf");
         IOUtils.copy(exportedData, response.getOutputStream());
     }
+
 }

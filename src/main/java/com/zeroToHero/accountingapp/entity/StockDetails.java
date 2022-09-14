@@ -20,9 +20,9 @@ public class StockDetails {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime iDate;
 
-    private BigDecimal quantity;
+    private BigInteger quantity;
     private BigDecimal price;
-    private BigDecimal remainingQuantity;
+    private BigInteger remainingQuantity;
 
     @OneToOne
     private Product product;

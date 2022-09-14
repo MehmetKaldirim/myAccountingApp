@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/category")
 public class CategoryController {
-//here smth
+
     private final CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {
@@ -25,13 +25,14 @@ public class CategoryController {
     }
 
     @PostMapping("/category-add")
-    public String insertCategory(@ModelAttribute("category") CategoryDTO category, BindingResult bindingResult, Model model) {
+    public String insertCategory(@ModelAttribute("category") CategoryDTO category,
+                                 BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("category", new CategoryDTO());
             return "/category/category-add";
         }
-//        categoryService.save(category);
-        return "/category/category-list";
+        categoryService.save(category);
+        return "redirect:/category/category-list";
     }
 
     @GetMapping("/category-edit/{id}")
@@ -40,18 +41,27 @@ public class CategoryController {
         return "/category/category-edit";
     }
 
-    @PostMapping("/category-edit")
-    public String updateCategory(@ModelAttribute("category") CategoryDTO category, BindingResult bindingResult, Model model) {
+    @PostMapping("/category-edit/{id}")
+    public String updateCategory(@ModelAttribute("category") CategoryDTO category,
+                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/category/category-edit";
         }
-//        categoryService.update(category);
-        return "/category/category-list";
+        categoryService.update(category);
+        return "redirect:/category/category-list";
     }
 
     @GetMapping("/category-list")
     public String listCategories(Model model) {
         model.addAttribute("categories", categoryService.listAllCategories());
         return "/category/category-list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id){
+
+        categoryService.delete(id);
+
+        return "redirect:/category/category-list";
     }
 }

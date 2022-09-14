@@ -18,4 +18,6 @@ public class CategoryDTO {
 
     @NotBlank
     private boolean enabled;
+
+    private CompanyDTO companyDTO;
 }

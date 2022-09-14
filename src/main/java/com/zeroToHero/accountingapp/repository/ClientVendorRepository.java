@@ -12,11 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientVendorRepository extends JpaRepository<ClientVendor, Long> {
-
     List<ClientVendor> findAllBy();
-
     ClientVendor findByEmail(String email);
-
     List<ClientVendor> findAllByType(CompanyType companyType);
 
     @Query(value = "SELECT company_name FROM Client_Vendor WHERE company_id in (select sptable_id from Invoice where id = ?1)",nativeQuery = true)
@@ -24,5 +21,7 @@ public interface ClientVendorRepository extends JpaRepository<ClientVendor, Long
 
     Optional<ClientVendor> findByCompanyName(String companyName);
 
-    List<ClientVendor> findAllByCompany(Company compnay);
+    List<ClientVendor> findAllByCompany(Company companyByLoggedInUser);
+
+    List<ClientVendor> findAllByTypeAndCompany(CompanyType companyType, Company companyByLoggedInUser);
 }

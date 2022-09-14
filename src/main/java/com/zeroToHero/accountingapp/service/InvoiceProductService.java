@@ -36,6 +36,4 @@ public interface InvoiceProductService {
     void disableInvoiceProductsByInvoiceId(Long id);
 
     BigDecimal getTaxByInvoiceId(Long id);
-
-
 }
